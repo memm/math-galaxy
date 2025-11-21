@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Trophy, Zap, User, Plus, Play, ArrowLeft, Check, X, Award, Calendar, RotateCcw, Trash2, LogOut, Target, Bot, Radio, Crown } from 'lucide-react';
+import { Star, Trophy, Zap, User, Plus, Play, ArrowLeft, Check, X, Award, Calendar, RotateCcw, Trash2, LogOut, Target, Radio, Crown } from 'lucide-react';
 
 // --- STAŁE I DANE ---
-
-// WAŻNE: Tutaj wstawiamy pusty klucz. Aplikacja użyje Trybu Symulacji jeśli jest pusty.
-const apiKey = ""; 
 
 const DAILY_XP_GOAL = 200; // Wymagane XP dziennie
 
@@ -33,48 +30,6 @@ const getNextRank = (xp) => {
   return RANKS.find(r => r.minXp > xp) || { name: "Max Level", minXp: xp };
 };
 
-// --- FUNKCJA DO KOMUNIKACJI Z GEMINI API (Z SYMULACJĄ) ---
-async function callGemini(prompt) {
-    if (!apiKey) {
-        console.log("Tryb Symulacji AI: Brak klucza API. Generowanie przykładowej odpowiedzi...");
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        if (prompt.includes("wskazówkę")) {
-            const hints = [
-                "Kosmiczna wskazówka: Spróbuj zobaczyć, o ile zwiększa się każda kolejna liczba!",
-                "Spójrz na różnicę między sąsiednimi liczbami. Czy jest stała?",
-                "Czasami liczby się mnożą, a nie dodają. Sprawdź to, Kadecie!",
-                "Wyobraź sobie, że to schody. Jak wysoki jest każdy stopień?"
-            ];
-            return hints[Math.floor(Math.random() * hints.length)] + " (Symulacja AI)";
-        } 
-        if (prompt.includes("gratulacji")) {
-            const congrats = [
-                "Niesamowita robota! Twoja wiedza rośnie szybciej niż prędkość światła! 🚀",
-                "Gratulacje Kadecie! Z takimi wynikami wkrótce przejmiesz dowodzenie nad stacją! ⭐",
-                "Baza jest pod wrażeniem! Twoje procesory matematyczne działają na najwyższych obrotach! 🤖",
-                "Wspaniały trening! Kolejna galaktyka wiedzy zdobyta! 🪐"
-            ];
-            return congrats[Math.floor(Math.random() * congrats.length)] + " (Symulacja AI)";
-        }
-        return "Przekaz z bazy: Działaj dalej, idzie Ci świetnie!";
-    }
-
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
-    } catch (error) {
-        console.error("Błąd Gemini API:", error);
-        return "Błąd łączności z bazą. Spróbuj ponownie później.";
-    }
-}
-
 // --- KOMPONENTY UI ---
 
 const Icon = ({ name, size = 24, className = "" }) => {
@@ -91,7 +46,6 @@ const Icon = ({ name, size = 24, className = "" }) => {
         RotateCcw: <RotateCcw size={size} />,
         Trash2: <Trash2 size={size} />,
         Target: <Target size={size} />,
-        Bot: <Bot size={size} />,
         Radio: <Radio size={size} />,
         Crown: <Crown size={size} />,
     };
@@ -209,8 +163,8 @@ const ProfilesScreen = ({ users, currentUser, onLogin, onCreate, onDelete, onCan
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-indigo-50 p-4">
         <Card className="w-full max-w-md text-center">
-          <img src="math-galaxy-hero-image-small.png" />
-          <h2 className="text-3xl font-bold text-indigo-800 mb-6">Nowy Kosmonauta</h2>
+          <h2 className="text-5xl font-extrabold text-indigo-900 mb-8">Nowy Kosmonauta</h2>
+          
           <div className="mb-6">
             <p className="text-gray-600 mb-2">Wybierz swój wygląd:</p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -221,7 +175,13 @@ const ProfilesScreen = ({ users, currentUser, onLogin, onCreate, onDelete, onCan
               ))}
             </div>
           </div>
-          <input type="text" placeholder="Twoje imię" value={newName} onChange={(e) => setNewName(e.target.value)} className="w-full text-center text-xl p-3 border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:outline-none mb-6" />
+          <input 
+            type="text" 
+            placeholder="Twoje imię" 
+            value={newName} 
+            onChange={(e) => setNewName(e.target.value)} 
+            className="w-full text-center text-4xl font-black text-indigo-800 p-4 border-4 border-indigo-200 rounded-3xl focus:border-indigo-500 focus:outline-none mb-8 placeholder-indigo-300 tracking-wide uppercase" 
+          />
           <div className="flex gap-4 justify-center">
             <Button variant="secondary" onClick={() => setIsCreating(false)}>Anuluj</Button>
             <Button disabled={!newName.trim()} onClick={handleCreateClick}>Stwórz</Button>
@@ -777,20 +737,7 @@ export default function MathGalaxy() {
                 </Card>
                 
                 {/* SEKCJA WSKAZÓWKI AI */}
-                <div className="w-full mb-4 min-h-[60px]">
-                    {!hint && !isLoadingHint && (
-                        <button onClick={getHint} className="w-full py-2 px-4 bg-purple-100 text-purple-600 rounded-xl font-bold hover:bg-purple-200 transition flex items-center justify-center gap-2 text-sm border border-purple-200">
-                            <Star size={16} className="text-purple-600" /> ✨ Potrzebuję Kosmicznej Wskazówki
-                        </button>
-                    )}
-                    {isLoadingHint && <div className="text-center text-purple-500 text-sm animate-pulse">📡 Nawiązywanie łączności z bazą wiedzy...</div>}
-                    {hint && (
-                        <div className="bg-purple-50 border border-purple-200 p-3 rounded-xl text-sm text-purple-800 text-center shadow-sm animate-bounce-in relative">
-                            <div className="absolute -top-3 -left-2 bg-white rounded-full p-1 border border-purple-200"><Bot size={16} className="text-purple-500" /></div>
-                            "{hint}"
-                        </div>
-                    )}
-                </div>
+                {/* ... AI code removed ... */}
 
                 <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
@@ -839,20 +786,7 @@ export default function MathGalaxy() {
             </Card>
             
             {/* SEKCJA WSKAZÓWKI AI (Dla standardowego trybu) */}
-            <div className="w-full mb-4 min-h-[60px]">
-                {!hint && !isLoadingHint && (
-                    <button onClick={getHint} className="w-full py-2 px-4 bg-purple-100 text-purple-600 rounded-xl font-bold hover:bg-purple-200 transition flex items-center justify-center gap-2 text-sm border border-purple-200">
-                        <Star size={16} className="text-purple-600" /> ✨ Potrzebuję Kosmicznej Wskazówki
-                    </button>
-                )}
-                {isLoadingHint && <div className="text-center text-purple-500 text-sm animate-pulse">📡 Nawiązywanie łączności z bazą wiedzy...</div>}
-                {hint && (
-                    <div className="bg-purple-50 border border-purple-200 p-3 rounded-xl text-sm text-purple-800 text-center shadow-sm animate-bounce-in relative">
-                        <div className="absolute -top-3 -left-2 bg-white rounded-full p-1 border border-purple-200"><Bot size={16} className="text-purple-500" /></div>
-                        "{hint}"
-                    </div>
-                )}
-            </div>
+            {/* ... AI code removed ... */}
 
             <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
@@ -871,15 +805,7 @@ export default function MathGalaxy() {
       const [motivation, setMotivation] = useState(null);
 
       useEffect(() => {
-          const fetchMotivation = async () => {
-              const prompt = `Napisz jedno zdanie entuzjastycznej gratulacji dla dziecka o imieniu ${currentUser.name}. 
-              Właśnie zakończyło sesję matematyczną z wynikiem ${gameStats.correct}/${gameStats.total} poprawnych odpowiedzi i zdobyło ${gameStats.xpGained} punktów doświadczenia. 
-              Bądź jak dowódca gwiezdnej floty. Użyj emoji.`;
-              
-              const response = await callGemini(prompt);
-              if (response) setMotivation(response);
-          };
-          fetchMotivation();
+          // ... AI code removed ...
       }, []);
 
       return (
@@ -892,7 +818,7 @@ export default function MathGalaxy() {
                  <Trophy size={56} className="animate-pulse" />
                </div>
                <h2 className="text-3xl font-bold text-gray-800">Misja Zakończona!</h2>
-               {motivation ? <div className="mt-4 p-3 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-100 text-indigo-800 text-sm font-medium italic animate-bounce-in">✨ "{motivation}"</div> : <div className="mt-4 h-12 flex items-center justify-center text-gray-400 text-xs animate-pulse">Odbieranie transmisji od Admirała...</div>}
+               {/* ... AI code removed ... */}
              </div>
 
              <div className="space-y-4 mb-8">
