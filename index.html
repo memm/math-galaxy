@@ -14,6 +14,16 @@
     <style>
         /* Ustawienie głównej czcionki */
         body { font-family: 'Inter', sans-serif; }
+        
+        /* Animacja wejścia dla modala */
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-bounce-in {
+            animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
     </style>
 </head>
 <body>
@@ -26,15 +36,21 @@
         const DAILY_XP_GOAL = 200; // Wymagane XP dziennie
 
         const RANKS = [
-          { name: "Kadet", minXp: 0 },
-          { name: "Pilot", minXp: 500 },
-          { name: "Astronauta", minXp: 1500 },
-          { name: "Kapitan", minXp: 3000 },
-          { name: "Komandor", minXp: 5000 },
-          { name: "Admirał Galaktyki", minXp: 10000 },
+          { name: "Kadet", minXp: 0, icon: "👶" },
+          { name: "Pilot", minXp: 500, icon: "✈️" },
+          { name: "Astronauta", minXp: 1500, icon: "🧑‍🚀" },
+          { name: "Kapitan", minXp: 3000, icon: "🎖️" },
+          { name: "Komandor", minXp: 5000, icon: "🛸" },
+          { name: "Admirał Galaktyki", minXp: 10000, icon: "👑" },
         ];
 
-        const AVATARS = ["👨‍🚀", "👩‍🚀", "🤖", "👽", "🐱‍🚀", "🚀", "⭐", "🪐"];
+        const AVATARS = ["👨‍🚀", "👩‍🚀", "🤖", "👽", "🐱", "🚀", "⭐", "🪐"];
+
+        const DIFFICULTY_LEVELS = {
+            easy: { name: "Łatwy (Planeta Ziemia)", color: "green", max: 30, description: "Liczby do 30. Idealne na rozgrzewkę." },
+            medium: { name: "Średni (Mars)", color: "yellow", max: 100, description: "Liczby dwucyfrowe, bez skomplikowanych przeniesień." },
+            hard: { name: "Trudny (Jowisz)", color: "red", max: 1000, description: "Liczby trzycyfrowe, wymaga koncentracji." },
+        };
 
         const getRank = (xp) => {
           return [...RANKS].reverse().find(r => xp >= r.minXp) || RANKS[0];
@@ -44,7 +60,7 @@
           return RANKS.find(r => r.minXp > xp) || { name: "Max Level", minXp: xp };
         };
 
-        // --- KOMPONENTY UI (Zastąpienie Lucide Icons prostymi SVG lub Unicode) ---
+        // --- KOMPONENTY UI ---
 
         const Icon = ({ name, size = 24, className = "" }) => {
             const icons = {
@@ -60,6 +76,9 @@
                 RotateCcw: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 4v6h6"></path><path d="M3 10a8 8 0 1 0 3.45-12.85"></path></svg>,
                 Trash2: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>,
                 Target: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>,
+                AlertTriangle: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>,
+                Lock: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>,
+                Unlock: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>,
             };
             return <span className={className}>{icons[name] || '•'}</span>;
         };
@@ -92,7 +111,91 @@
           </div>
         );
 
+        // --- KOMPONENT MODALA ---
+        const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform animate-bounce-in text-center">
+                        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+                            <Icon name="Trash2" size={40} />
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">Usunąć profil?</h3>
+                        <p className="text-gray-500 mb-8">
+                            Czy na pewno chcesz usunąć tego kosmonautę? Wszystkie zdobyte gwiazdki i puchary zostaną utracone!
+                        </p>
+                        <div className="flex flex-col gap-3">
+                            <Button variant="danger" onClick={onConfirm}>
+                                Tak, usuń profil
+                            </Button>
+                            <Button variant="secondary" onClick={onClose}>
+                                Nie, zachowaj
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // --- EKRANY ---
+
+        // --- NOWY EKRAN: MAPA RANG ---
+        const RanksScreen = ({ currentXp, onReturn }) => {
+            const currentRank = getRank(currentXp);
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4 flex flex-col items-center">
+                    <div className="w-full max-w-2xl mb-6 flex items-center justify-between text-white mt-4">
+                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm">
+                            <Icon name="ArrowLeft" size={16} /> Wróć
+                        </Button>
+                        <h2 className="text-2xl font-bold flex items-center gap-2">
+                            <Icon name="Trophy" className="text-yellow-400" /> Mapa Kariery
+                        </h2>
+                        <div className="w-16"></div> {/* Spacer */}
+                    </div>
+
+                    <div className="w-full max-w-lg space-y-4 pb-10">
+                        {RANKS.map((rank, index) => {
+                            const isUnlocked = currentXp >= rank.minXp;
+                            const isCurrent = currentRank.name === rank.name;
+                            
+                            return (
+                                <div 
+                                    key={rank.name} 
+                                    className={`relative flex items-center gap-4 p-4 rounded-2xl border-4 transition-all ${
+                                        isCurrent ? 'bg-white border-yellow-400 scale-105 shadow-[0_0_20px_rgba(250,204,21,0.5)] z-10' : 
+                                        isUnlocked ? 'bg-indigo-800 border-indigo-600 text-indigo-100' : 
+                                        'bg-gray-800 border-gray-700 text-gray-500 opacity-70'
+                                    }`}
+                                >
+                                    <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl border-2 ${
+                                        isUnlocked ? 'bg-indigo-100 border-indigo-300' : 'bg-gray-700 border-gray-600'
+                                    }`}>
+                                        {rank.icon}
+                                    </div>
+                                    
+                                    <div className="flex-1">
+                                        <div className="flex justify-between items-center">
+                                            <h3 className={`text-xl font-bold ${isCurrent ? 'text-indigo-900' : ''}`}>{rank.name}</h3>
+                                            {isUnlocked ? 
+                                                <Icon name="Unlock" size={20} className={isCurrent ? "text-green-500" : "text-indigo-400"} /> : 
+                                                <Icon name="Lock" size={20} />
+                                            }
+                                        </div>
+                                        <p className={`text-sm font-medium ${isCurrent ? 'text-indigo-600' : ''}`}>
+                                            Wymagane XP: {rank.minXp}
+                                        </p>
+                                        {isCurrent && <span className="inline-block mt-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full border border-yellow-300">Twój stopień</span>}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
 
         const ProfilesScreen = ({ users, currentUser, onLogin, onCreate, onDelete, onCancelCreate }) => {
           const [isCreating, setIsCreating] = React.useState(false);
@@ -161,7 +264,7 @@
               )}
 
               <div className="text-center mb-8 mt-8">
-                <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">Matematyczna Galaktyka</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">Matematyczna Galaktyka 🪐</h1>
                 <p className="text-indigo-600 text-lg font-medium">Wybierz pilota misji:</p>
               </div>
 
@@ -190,8 +293,11 @@
                     </button>
                     
                     <button 
-                      onClick={(e) => onDelete(e, user.id)}
-                      className="absolute top-4 right-4 p-2 bg-white/80 rounded-full shadow-sm text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 z-10"
+                      onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(user.id);
+                      }}
+                      className="absolute top-4 right-4 p-2 bg-white/90 rounded-full shadow-sm text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 z-20 cursor-pointer border border-gray-100"
                       title="Usuń profil"
                     >
                       <Icon name="Trash2" size={20} />
@@ -211,14 +317,76 @@
           );
         };
 
-        const DashboardScreen = ({ currentUser, onChangeProfile, onStartGame }) => {
+        const LevelSelectionScreen = ({ mode, onSelectLevel, onCancel }) => {
+            const modeNames = {
+                add: { name: "Dodawanie", icon: <Icon name="Plus" size={32} /> },
+                sub: { name: "Odejmowanie", icon: <span className="text-4xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-2">-</span> },
+                mul: { name: "Mnożenie", icon: <span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8">×</span> },
+                div: { name: "Dzielenie", icon: <span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-1">:</span> },
+            };
+
+            const modeInfo = modeNames[mode] || { name: "Misja", icon: null };
+
+            const levelColors = {
+                green: 'border-green-400 text-green-700 bg-green-50 hover:bg-green-100',
+                yellow: 'border-yellow-400 text-yellow-700 bg-yellow-50 hover:bg-yellow-100',
+                red: 'border-red-400 text-red-700 bg-red-50 hover:bg-red-100',
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 flex flex-col items-center justify-center p-4">
+                    <div className="w-full max-w-2xl text-center mb-8">
+                        <h1 className="text-3xl font-bold text-indigo-800 mb-2">Wybór Trudności</h1>
+                        <p className="text-lg text-gray-600 flex items-center justify-center gap-2">
+                            {modeInfo.icon} Tryb: <span className="font-extrabold text-indigo-600">{modeInfo.name}</span>
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
+                        {Object.keys(DIFFICULTY_LEVELS).map(levelKey => {
+                            const level = DIFFICULTY_LEVELS[levelKey];
+                            const colorClass = levelColors[level.color] || levelColors['yellow'];
+                            
+                            return (
+                                <button
+                                    key={levelKey}
+                                    onClick={() => onSelectLevel(mode, levelKey)}
+                                    className={`w-full p-6 rounded-3xl shadow-xl border-b-8 transition-all transform hover:scale-[1.02] ${colorClass}`}
+                                >
+                                    <div className="text-3xl font-black mb-2">{level.name}</div>
+                                    <p className="text-sm text-gray-600 mb-4">{level.description}</p>
+                                    <div className="font-bold text-lg">
+                                        Zakres: do {level.max}
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                    
+                    <div className="mt-8">
+                        <Button variant="secondary" onClick={onCancel}>
+                            <Icon name="ArrowLeft" size={20} /> Wróć do Pulpitu
+                        </Button>
+                    </div>
+                </div>
+            );
+        };
+
+
+        const DashboardScreen = ({ currentUser, onChangeProfile, onSelectMode, onShowRanks }) => {
           const rank = getRank(currentUser.xp);
           const nextRank = getNextRank(currentUser.xp);
           const progress = Math.min(100, ((currentUser.xp - rank.minXp) / (nextRank.minXp - rank.minXp)) * 100);
           
-          // Obliczenia dla dziennego celu
           const dailyProgress = Math.min(100, ((currentUser.dailyXp || 0) / DAILY_XP_GOAL) * 100);
           const isDailyGoalMet = (currentUser.dailyXp || 0) >= DAILY_XP_GOAL;
+
+          // Funkcja pomocnicza do obsługi kliknięcia, zabezpieczająca przed błędem
+          const handleModeClick = (mode) => {
+              if (typeof onSelectMode === 'function') {
+                  onSelectMode(mode);
+              }
+          };
 
           return (
             <div className="min-h-screen bg-gray-50 pb-10">
@@ -246,11 +414,15 @@
                    </button>
                 </div>
                 
-                {/* Pasek Postępu Rangi */}
-                <div className="max-w-4xl mx-auto mt-8 bg-indigo-900/40 rounded-full p-1 backdrop-blur-md border border-indigo-500/30 relative z-10">
+                {/* Pasek Postępu Rangi - TERAZ KLIKALNY */}
+                <div 
+                    onClick={onShowRanks}
+                    className="max-w-4xl mx-auto mt-8 bg-indigo-900/40 rounded-full p-1 backdrop-blur-md border border-indigo-500/30 relative z-10 cursor-pointer hover:scale-[1.02] transition-transform group"
+                    title="Kliknij, aby zobaczyć mapę rang"
+                >
                    <div className="flex justify-between text-xs font-bold uppercase tracking-wider px-3 mb-1 text-indigo-200">
                      <span>XP: {currentUser.xp}</span>
-                     <span>Cel: {nextRank.name} ({nextRank.minXp} XP)</span>
+                     <span className="flex items-center gap-1">Cel: {nextRank.name} ({nextRank.minXp} XP) <Icon name="Award" size={12} /></span>
                    </div>
                    <div className="w-full bg-indigo-900/50 rounded-full h-4 overflow-hidden">
                      <div 
@@ -258,13 +430,17 @@
                        style={{ width: `${progress}%` }}
                      ></div>
                    </div>
+                   {/* Wskazówka po najechaniu - prosta */}
+                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-[10px] text-indigo-200 opacity-0 group-hover:opacity-100 transition-opacity">
+                       Zobacz wszystkie rangi
+                   </div>
                 </div>
               </div>
 
-              {/* Statystyki i Gry - Przesunięte wyżej */}
+              {/* Statystyki i Gry */}
               <div className="max-w-4xl mx-auto px-4 -mt-24 relative z-10">
                 
-                {/* Sekcja Celu Dziennego - Nowa Karta */}
+                {/* Sekcja Celu Dziennego */}
                 <Card className="mb-6 border-b-4 border-blue-400 bg-white shadow-lg">
                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                      <div className="flex items-center gap-4">
@@ -311,8 +487,7 @@
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 pl-2 border-l-4 border-indigo-500 ml-1">Wybierz misję:</h2>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Przyciski gier (bez zmian) */}
-                  <button onClick={() => onStartGame('add')} className="bg-white group hover:bg-green-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-green-200 hover:border-green-400 transition-all flex items-center gap-6">
+                  <button onClick={() => handleModeClick('add')} className="bg-white group hover:bg-green-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-green-200 hover:border-green-400 transition-all flex items-center gap-6">
                      <div className="bg-green-100 text-green-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                         <Icon name="Plus" size={32} />
                      </div>
@@ -322,7 +497,7 @@
                      </div>
                   </button>
 
-                  <button onClick={() => onStartGame('sub')} className="bg-white group hover:bg-red-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-red-200 hover:border-red-400 transition-all flex items-center gap-6">
+                  <button onClick={() => handleModeClick('sub')} className="bg-white group hover:bg-red-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-red-200 hover:border-red-400 transition-all flex items-center gap-6">
                      <div className="bg-red-100 text-red-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                         <span className="text-4xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-2">-</span>
                      </div>
@@ -332,7 +507,7 @@
                      </div>
                   </button>
 
-                  <button onClick={() => onStartGame('mul')} className="bg-white group hover:bg-blue-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-blue-200 hover:border-blue-400 transition-all flex items-center gap-6">
+                  <button onClick={() => handleModeClick('mul')} className="bg-white group hover:bg-blue-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-blue-200 hover:border-blue-400 transition-all flex items-center gap-6">
                      <div className="bg-blue-100 text-blue-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                         <span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8">×</span>
                      </div>
@@ -342,7 +517,7 @@
                      </div>
                   </button>
 
-                  <button onClick={() => onStartGame('div')} className="bg-white group hover:bg-orange-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-orange-200 hover:border-orange-400 transition-all flex items-center gap-6">
+                  <button onClick={() => handleModeClick('div')} className="bg-white group hover:bg-orange-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-orange-200 hover:border-orange-400 transition-all flex items-center gap-6">
                      <div className="bg-orange-100 text-orange-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                         <span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-1">:</span>
                      </div>
@@ -357,7 +532,7 @@
           );
         };
 
-        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame }) => {
+        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName }) => {
           if (!question) return <div className="min-h-screen flex items-center justify-center bg-indigo-50 font-bold text-indigo-500">Ładowanie misji...</div>;
 
           return (
@@ -373,7 +548,7 @@
 
               <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
                 <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                  <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">Rozwiąż równanie</div>
+                  <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">Poziom: {difficultyName}</div>
                   <div className="text-6xl sm:text-7xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap">
                     <span>{question.a}</span>
                     <span className="text-indigo-500">{question.operator}</span>
@@ -509,10 +684,14 @@
           const [currentUser, setCurrentUser] = React.useState(null);
           
           const [gameMode, setGameMode] = React.useState(null);
+          const [gameDifficulty, setGameDifficulty] = React.useState(null);
           const [question, setQuestion] = React.useState(null);
           const [userAnswer, setUserAnswer] = React.useState('');
           const [feedback, setFeedback] = React.useState(null);
           const [gameStats, setGameStats] = React.useState({ correct: 0, total: 0, xpGained: 0 });
+
+          // NOWY STAN: ID użytkownika do usunięcia (dla modala)
+          const [userToDelete, setUserToDelete] = React.useState(null);
 
           // Persystencja
           React.useEffect(() => {
@@ -541,15 +720,20 @@
             loginUser(newUser, updatedUsers);
           };
 
-          const handleDeleteUser = (e, userId) => {
-            e.stopPropagation();
-            // Używamy window.confirm tylko jako tymczasowego zastępstwa, w prawdziwej aplikacji byłby to modal UI.
-            if (window.confirm("Czy na pewno usunąć ten profil?")) {
-              const updatedUsers = users.filter(u => u.id !== userId);
-              setUsers(updatedUsers);
-              if (currentUser?.id === userId) {
-                setCurrentUser(null);
-              }
+          // ZMODYFIKOWANA FUNKCJA: Zamiast usuwać, otwiera modal
+          const handleDeleteUserClick = (userId) => {
+            setUserToDelete(userId);
+          };
+
+          // NOWA FUNKCJA: Faktyczne usunięcie po potwierdzeniu
+          const confirmDeleteUser = () => {
+            if (userToDelete) {
+                const updatedUsers = users.filter(u => u.id !== userToDelete);
+                setUsers(updatedUsers);
+                if (currentUser?.id === userToDelete) {
+                    setCurrentUser(null);
+                }
+                setUserToDelete(null);
             }
           };
 
@@ -558,19 +742,16 @@
             let updatedUser = { ...user };
 
             if (user.lastPlayed !== today) {
-               // Jeśli nowy dzień, resetujemy dzienny postęp i status celu.
                updatedUser.dailyXp = 0;
                updatedUser.dailyGoalReached = false;
                
                const yesterday = new Date();
                yesterday.setDate(yesterday.getDate() - 1);
                
-               // Resetujemy streak, jeśli przerwa jest dłuższa niż jeden dzień.
                if (user.lastPlayed && user.lastPlayed !== yesterday.toDateString()) {
                   updatedUser.streak = 0; 
                }
             } else {
-                // Jeśli ten sam dzień, zachowujemy dzienny XP i status celu.
                 updatedUser.dailyXp = user.dailyXp || 0;
                 updatedUser.dailyGoalReached = user.dailyGoalReached || false;
             }
@@ -587,26 +768,16 @@
             const today = new Date().toDateString();
             let updatedUser = { ...currentUser };
             
-            updatedUser.xp += xpGained;
+            // Zabezpieczenie przed ujemnym XP całkowitym
+            updatedUser.xp = Math.max(0, updatedUser.xp + xpGained);
             
             const currentDailyXp = updatedUser.dailyXp || 0;
-            const newDailyXp = currentDailyXp + xpGained;
+            // Daily XP może spadać? Załóżmy że tak, bo to "postęp".
+            const newDailyXp = Math.max(0, currentDailyXp + xpGained); 
             updatedUser.dailyXp = newDailyXp;
             updatedUser.lastPlayed = today;
 
-            // Logika Streak: zwiększamy streak tylko raz dziennie, gdy osiągnięto cel 200 XP
             if (newDailyXp >= DAILY_XP_GOAL && !updatedUser.dailyGoalReached) {
-               // Jeśli ostatni zarejestrowany dzień to wczoraj, to streak +1. 
-               // Jeśli to pierwszy raz dzisiaj osiągnął cel, a ostatni raz grał starszy niż wczoraj, streak jest resetowany do 1 (został wyzerowany przy logowaniu).
-               // Jeśli ostatni raz grał wczoraj, streak już jest poprawny.
-               
-               const yesterday = new Date();
-               yesterday.setDate(yesterday.getDate() - 1);
-
-               // Sprawdzamy, czy wczoraj miał już zaliczony cel, by nie dodawać podwójnie.
-               // Ponieważ przy logowaniu z nowego dnia, streak jest resetowany TYLKO jeśli była duża przerwa, 
-               // a w innym przypadku zostaje 0, 
-               // wystarczy, że dodamy 1, gdy osiągnął cel i nie miał go jeszcze zaliczonego dzisiaj.
                updatedUser.streak += 1;
                updatedUser.dailyGoalReached = true;
             }
@@ -615,32 +786,58 @@
             setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
           };
 
-          // Generowanie pytań
-          const generateQuestion = (mode) => {
+          // Generowanie pytań - Zmodyfikowane o poziom trudności
+          const generateQuestion = (mode, difficulty) => {
+            const maxVal = DIFFICULTY_LEVELS[difficulty].max;
             let a, b, operator, answer;
+            let minVal = 1;
+
+            if (difficulty === 'medium') minVal = 10;
+            if (difficulty === 'hard') minVal = 100;
+
+            const generateRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+            
             switch (mode) {
               case 'add':
-                a = Math.floor(Math.random() * 90) + 10;
-                b = Math.floor(Math.random() * 90) + 10;
+                a = generateRandom(minVal, Math.floor(maxVal * 0.7));
+                b = generateRandom(minVal, maxVal - a);
                 operator = '+';
                 answer = a + b;
                 break;
               case 'sub':
-                a = Math.floor(Math.random() * 90) + 10;
-                b = Math.floor(Math.random() * a);
+                a = generateRandom(minVal, maxVal);
+                b = generateRandom(1, a - (maxVal > 10 ? 1 : 0));
                 operator = '-';
                 answer = a - b;
                 break;
               case 'mul':
-                a = Math.floor(Math.random() * 9) + 2;
-                b = Math.floor(Math.random() * 9) + 2;
+                let maxFactor = Math.min(12, Math.floor(maxVal / 2));
+                if (difficulty === 'easy') maxFactor = Math.min(10, maxVal);
+
+                a = generateRandom(1, maxFactor);
+                b = generateRandom(1, maxFactor);
+                
+                if (a * b > maxVal) {
+                    a = generateRandom(1, Math.floor(maxVal / b));
+                }
+                
                 operator = '×';
                 answer = a * b;
                 break;
               case 'div':
-                b = Math.floor(Math.random() * 9) + 2;
-                answer = Math.floor(Math.random() * 9) + 2;
+                let divisorMax = Math.min(12, maxVal);
+                if (difficulty === 'easy') divisorMax = Math.min(10, maxVal);
+                
+                b = generateRandom(2, divisorMax);
+                answer = generateRandom(1, divisorMax);
                 a = b * answer;
+
+                if (a > maxVal) {
+                    answer = generateRandom(1, Math.floor(maxVal / b));
+                    if (answer < 1) answer = 1;
+                    a = b * answer;
+                }
+                
                 operator = ':';
                 break;
               default: return;
@@ -650,18 +847,25 @@
             setFeedback(null);
           };
 
-          const startGame = (mode) => {
+          // ZMIANA NAZWY FUNKCJI NA HANDLESELECTMODE
+          const handleSelectMode = (mode) => {
             setGameMode(mode);
+            setGameDifficulty(null);
+            setView('selectLevel');
+          };
+
+          const startGame = (mode, difficulty) => {
+            setGameMode(mode);
+            setGameDifficulty(difficulty);
             setGameStats({ correct: 0, total: 0, xpGained: 0 });
             setView('game');
-            generateQuestion(mode);
+            generateQuestion(mode, difficulty);
           };
 
           const handleGameInput = (val) => {
             if (val === 'backspace') {
               setUserAnswer(prev => prev.slice(0, -1));
             } else {
-              // Ograniczenie do 4 cyfr
               if (userAnswer.length < 4) {
                  setUserAnswer(prev => prev + val);
               }
@@ -673,18 +877,19 @@
             if (isNaN(val)) return;
 
             const isCorrect = val === question.answer;
-            const xp = isCorrect ? 10 : 0;
+            // Zmiana: +10 za poprawną, -5 za błędną (zamiast -10)
+            const xpChange = isCorrect ? 10 : -5;
 
             setFeedback(isCorrect ? 'correct' : 'wrong');
             setGameStats(prev => ({
               correct: prev.correct + (isCorrect ? 1 : 0),
               total: prev.total + 1,
-              xpGained: prev.xpGained + xp
+              xpGained: prev.xpGained + xpChange
             }));
 
             if (isCorrect) {
               setTimeout(() => {
-                generateQuestion(gameMode);
+                generateQuestion(gameMode, gameDifficulty);
               }, 1000);
             }
           };
@@ -694,7 +899,8 @@
             setView('summary');
           };
 
-          // Routing
+          const currentDifficultyName = gameDifficulty ? DIFFICULTY_LEVELS[gameDifficulty].name : 'Nieznany';
+
           return (
             <div className="font-sans text-slate-800 select-none">
               {view === 'profiles' && (
@@ -703,7 +909,7 @@
                   currentUser={currentUser}
                   onLogin={loginUser} 
                   onCreate={handleCreateUser} 
-                  onDelete={handleDeleteUser}
+                  onDelete={handleDeleteUserClick}
                   onCancelCreate={() => setView('dashboard')}
                 />
               )}
@@ -711,7 +917,21 @@
                 <DashboardScreen 
                   currentUser={currentUser} 
                   onChangeProfile={() => setView('profiles')}
-                  onStartGame={startGame}
+                  onSelectMode={handleSelectMode} // Przekazujemy nową nazwę funkcji
+                  onShowRanks={() => setView('ranks')} // NOWE: obsługa kliknięcia w pasek XP
+                />
+              )}
+              {view === 'ranks' && currentUser && (
+                <RanksScreen
+                    currentXp={currentUser.xp}
+                    onReturn={() => setView('dashboard')}
+                />
+              )}
+              {view === 'selectLevel' && gameMode && (
+                <LevelSelectionScreen
+                    mode={gameMode}
+                    onSelectLevel={startGame}
+                    onCancel={() => setView('dashboard')}
                 />
               )}
               {view === 'game' && (
@@ -723,6 +943,7 @@
                   onAnswerChange={handleGameInput}
                   onCheckAnswer={checkAnswer}
                   onFinishGame={finishGame}
+                  difficultyName={currentDifficultyName}
                 />
               )}
               {view === 'summary' && (
@@ -733,11 +954,17 @@
                   onReturn={() => setView('dashboard')}
                 />
               )}
+              
+              {/* Okno Potwierdzenia - Wyświetlane nad resztą */}
+              <DeleteConfirmationModal 
+                isOpen={!!userToDelete}
+                onClose={() => setUserToDelete(null)}
+                onConfirm={confirmDeleteUser}
+              />
             </div>
           );
         }
 
-        // Renderowanie aplikacji
         const domNode = document.getElementById('root');
         const root = ReactDOM.createRoot(domNode);
         root.render(<MathGalaxy />);
