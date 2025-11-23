@@ -42,7 +42,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // --- SOUND MANAGER ---
         const SoundManager = {
@@ -77,7 +77,14 @@
                 this.playTone(783.99, 'square', 0.2, now + 0.4); 
                 this.playTone(1046.50, 'square', 0.6, now + 0.6); 
             },
-            playBuy: function() { // Dźwięk kasy
+            playAchievement: function() { // Fanfary dla odznaki
+                const now = 0;
+                this.playTone(783.99, 'triangle', 0.15, now); // G5
+                this.playTone(783.99, 'triangle', 0.15, now + 0.15); 
+                this.playTone(783.99, 'triangle', 0.15, now + 0.3); 
+                this.playTone(1046.50, 'triangle', 0.6, now + 0.45); // C6
+            },
+            playBuy: function() { 
                 this.playTone(1200, 'sine', 0.1, 0, 0.1);
                 this.playTone(1600, 'sine', 0.4, 0.1, 0.1);
             }
@@ -85,10 +92,19 @@
 
         // --- KONFIGURACJA DEXIE DB ---
         const db = new Dexie('MathGalaxyDB');
-        // Aktualizacja schematu bazy danych
-        db.version(2).stores({
-            users: '++id, name, xp, totalXp, streak, lastPlayed, dailyXp, dailyGoalReached, unlockedItems, activeBackground, activeSkin' 
+        // Aktualizacja schematu bazy danych (v3 dodaje achievements i consecutiveCorrect)
+        db.version(3).stores({
+            users: '++id, name, xp, totalXp, streak, lastPlayed, dailyXp, dailyGoalReached, unlockedItems, activeBackground, activeSkin, achievements, consecutiveCorrect' 
         });
+
+        // --- DANE ODZNAK ---
+        const ACHIEVEMENTS = [
+            { id: 'first_step', name: 'Pierwszy Krok', icon: '👣', desc: 'Rozwiąż pierwsze zadanie.' },
+            { id: 'speedster', name: 'Szybki jak kometa', icon: '☄️', desc: '10 poprawnych odpowiedzi w minutę.' },
+            { id: 'flawless', name: 'Bezbłędny Lot', icon: '💎', desc: '50 poprawnych odpowiedzi z rzędu.' },
+            { id: 'night_owl', name: 'Nocny Marek', icon: '🦉', desc: 'Trening po godzinie 20:00.' },
+            { id: 'math_master', name: 'Mistrz Liczb', icon: '🧠', desc: 'Zdobądź 1000 XP.' }
+        ];
 
         // --- DANE SKLEPU ---
         const SHOP_ITEMS = [
@@ -115,7 +131,6 @@
           { name: "Admirał Galaktyki", minXp: 10000, icon: "👑" },
         ];
 
-        // Podstawowe darmowe awatary - zmieniona nazwa zmiennej
         const BASE_AVATARS = ["👨‍🚀", "👩‍🚀", "🤖", "👽", "🐱", "🚀", "⭐", "🪐"];
 
         const DIFFICULTY_LEVELS = {
@@ -142,7 +157,6 @@
                 RotateCcw: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/><path d="M3 5v7h7"/></svg>,
                 Trash2: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>,
                 Target: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>,
-                AlertTriangle: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>,
                 Lock: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>,
                 Unlock: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>,
                 HelpCircle: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>,
@@ -151,6 +165,7 @@
                 Terminal: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>,
                 ShoppingBag: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
                 Coins: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>,
+                Medal: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/></svg>,
             };
             return <span className={className}>{icons[name] || '•'}</span>;
         };
@@ -164,7 +179,6 @@
             danger: "bg-red-500 text-white hover:bg-red-600 border-b-4 border-red-700",
             outline: "border-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
           };
-
           return (
             <button 
               onClick={() => { SoundManager.playClick(); if(onClick) onClick(); }}
@@ -176,11 +190,44 @@
           );
         };
 
-        // POPRAWKA: Card teraz przyjmuje ...props, aby obsługiwać onClick
         const Card = ({ children, className = "", ...props }) => (
           <div className={`bg-white rounded-3xl shadow-xl p-6 ${className}`} {...props}>
             {children}
           </div>
+        );
+
+        // --- SEKCA MARKETINGOWA ---
+        const MarketingSection = () => (
+            <div className="w-full max-w-4xl mb-8 animate-bounce-in">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                   <Card className="bg-white/80 border-4 border-yellow-300 transform hover:-translate-y-2 transition-all duration-300">
+                      <div className="text-center">
+                         <div className="text-6xl mb-4">🦸‍♂️</div>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">Zostań Bohaterem!</h3>
+                         <p className="text-sm text-gray-600 font-medium">Ćwicz mózg, licz szybciej niż rakieta i pokonuj wyzwania!</p>
+                      </div>
+                   </Card>
+                   
+                   <Card className="bg-white/80 border-4 border-purple-300 transform hover:-translate-y-2 transition-all duration-300 delay-100">
+                      <div className="text-center">
+                         <div className="text-6xl mb-4">🏆</div>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">Zbieraj Nagrody!</h3>
+                         <p className="text-sm text-gray-600 font-medium">Zdobywaj puchary, odznaki i wbijaj kosmiczne rangi!</p>
+                      </div>
+                   </Card>
+                   
+                   <Card className="bg-white/80 border-4 border-green-300 transform hover:-translate-y-2 transition-all duration-300 delay-200">
+                      <div className="text-center">
+                         <div className="text-6xl mb-4">🛍️</div>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">Kosmiczny Sklep!</h3>
+                         <p className="text-sm text-gray-600 font-medium">Wymieniaj punkty na nowe postacie i tła. Twój styl, Twoja gra!</p>
+                      </div>
+                   </Card>
+                </div>
+                <div className="text-center mt-8 bg-indigo-100/50 p-4 rounded-3xl backdrop-blur-sm border-2 border-indigo-200">
+                    <p className="text-indigo-800 font-bold text-lg">Gotowy na start? Stwórz profil i ruszaj w drogę! 🚀</p>
+                </div>
+            </div>
         );
 
         // --- KOMPONENTY ---
@@ -214,7 +261,6 @@
                                         <div className="text-2xl">{user.avatar}</div>
                                         <div className="flex flex-col">
                                             <span className={`font-bold ${isCurrentUser ? 'text-indigo-700' : 'text-gray-700'}`}>{user.name} {isCurrentUser && "(Ty)"}</span>
-                                            {/* Używamy totalXp do rangi jeśli istnieje, fallback do xp */}
                                             <span className="text-[10px] text-gray-400 font-medium uppercase">{getRank(user.totalXp || user.xp).name}</span>
                                         </div>
                                     </div>
@@ -241,33 +287,88 @@
             );
         };
 
-        // --- NOWY EKRAN: SKLEP ---
-        const ShopScreen = ({ user, onBuy, onEquip, onReturn }) => {
+        // --- MODAL ODBLOKOWANIA ODZNAKI ---
+        const AchievementUnlockedModal = ({ achievement, onClose }) => {
+            if (!achievement) return null;
             return (
-                <div className="min-h-screen bg-white/90 p-4 flex flex-col items-center">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-md animate-bounce-in">
+                    <div className="bg-white rounded-[2rem] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-yellow-400 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full bg-yellow-50 -z-10 opacity-50"></div>
+                        <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-200 rounded-full blur-2xl opacity-50"></div>
+                        
+                        <div className="text-6xl mb-4 animate-bounce">{achievement.icon}</div>
+                        <h2 className="text-2xl font-black text-indigo-900 mb-2 uppercase tracking-wide">Nowa Odznaka!</h2>
+                        <h3 className="text-xl font-bold text-yellow-600 mb-4">{achievement.name}</h3>
+                        <p className="text-gray-600 mb-8 text-sm font-medium">{achievement.desc}</p>
+                        <Button onClick={onClose} className="w-full">Super!</Button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- EKRAN OSIĄGNIĘĆ ---
+        const AchievementsScreen = ({ user, onReturn }) => {
+            return (
+                <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4 flex flex-col items-center">
+                    <div className="w-full max-w-3xl mb-6 flex items-center justify-between text-white mt-4">
+                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> Wróć</Button>
+                        <h2 className="text-2xl font-bold flex items-center gap-2"><Icon name="Medal" className="text-yellow-400" /> Galeria Chwały</h2>
+                        <div className="w-16"></div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl pb-10">
+                        {ACHIEVEMENTS.map((ach) => {
+                            const isUnlocked = user.achievements?.includes(ach.id);
+                            return (
+                                <div key={ach.id} className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${isUnlocked ? 'bg-white border-yellow-400' : 'bg-white/10 border-white/10 text-gray-400'}`}>
+                                    <div className={`w-16 h-16 rounded-full flex items-center justify-center text-4xl border-2 ${isUnlocked ? 'bg-yellow-100 border-yellow-300' : 'bg-gray-800 border-gray-700 grayscale'}`}>
+                                        {ach.icon}
+                                    </div>
+                                    <div>
+                                        <h3 className={`text-lg font-bold ${isUnlocked ? 'text-gray-800' : 'text-gray-300'}`}>{ach.name}</h3>
+                                        <p className={`text-xs ${isUnlocked ? 'text-gray-600' : 'text-gray-500'}`}>{ach.desc}</p>
+                                        {isUnlocked && <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full border border-green-200">Zdobyte!</span>}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        // --- EKRAN SKLEPU ---
+        const ShopScreen = ({ user, onBuy, onEquip, onReturn }) => {
+            // Helper for text color based on background
+            const isDark = user.activeBackground?.includes('nebula') || user.activeBackground?.includes('blackhole');
+            const textColor = isDark ? 'text-white' : 'text-indigo-900';
+            const subTextColor = isDark ? 'text-gray-200' : 'text-gray-500';
+            const sectionTitleColor = isDark ? 'text-gray-100 border-gray-400' : 'text-gray-700 border-gray-100';
+
+            return (
+                <div className={`min-h-screen p-4 flex flex-col items-center ${user.activeBackground || 'bg-theme-default'}`}>
                     <div className="w-full max-w-4xl mb-6 flex items-center justify-between mt-4">
                         <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> Wróć</Button>
                         <div className="flex items-center gap-4">
                              <div className="flex flex-col items-end">
-                                <span className="text-xs text-gray-500 font-bold uppercase">Twój Portfel</span>
-                                <span className="text-2xl font-black text-indigo-600 flex items-center gap-2">{user.xp} <Icon name="Coins" className="text-yellow-500"/></span>
+                                <span className={`text-xs font-bold uppercase ${subTextColor}`}>Twój Portfel</span>
+                                <span className={`text-2xl font-black flex items-center gap-2 ${textColor}`}>{user.xp} <Icon name="Coins" className="text-yellow-500"/></span>
                              </div>
                         </div>
                     </div>
 
-                    <h2 className="text-3xl font-extrabold text-indigo-900 mb-2 flex items-center gap-2"><Icon name="ShoppingBag" size={32} /> Kosmiczny Sklepik</h2>
-                    <p className="text-gray-500 mb-8">Wydawaj XP na super nagrody! Nie martw się, Twoja ranga nie spadnie.</p>
+                    <h2 className={`text-3xl font-extrabold mb-2 flex items-center gap-2 ${textColor}`}><Icon name="ShoppingBag" size={32} /> Kosmiczny Sklepik</h2>
+                    <p className={`mb-8 ${subTextColor}`}>Wydawaj XP na super nagrody! Nie martw się, Twoja ranga nie spadnie.</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                        {/* Sekcja: Awatary */}
-                        <div className="col-span-1 md:col-span-3"><h3 className="text-xl font-bold text-gray-700 border-b-2 border-gray-100 pb-2 mb-4">Nowe Postacie</h3></div>
+                        <div className="col-span-1 md:col-span-3"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Nowe Postacie</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'avatar').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.avatar === item.content;
                             return (
-                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-gray-100'}`}>
+                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className="text-6xl mb-4">{item.content}</div>
-                                    <h4 className="font-bold text-lg">{item.name}</h4>
+                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
                                     <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
                                     {isOwned ? (
                                         <Button 
@@ -287,53 +388,43 @@
                                             Kup za {item.price} XP
                                         </Button>
                                     )}
-                                </Card>
+                                </div>
                             );
                         })}
 
-                        {/* Sekcja: Tła */}
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className="text-xl font-bold text-gray-700 border-b-2 border-gray-100 pb-2 mb-4">Kosmiczne Tła</h3></div>
+                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Kosmiczne Tła</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'background').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeBackground === item.content;
                             return (
-                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-gray-100'}`}>
+                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className={`w-full h-24 rounded-xl mb-4 ${item.content} flex items-center justify-center text-4xl`}>{item.icon}</div>
-                                    <h4 className="font-bold text-lg">{item.name}</h4>
+                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
                                     <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
                                     {isOwned ? (
-                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">
-                                            {isEquipped ? 'Używasz' : 'Wybierz'}
-                                        </Button>
+                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? 'Używasz' : 'Wybierz'}</Button>
                                     ) : (
-                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>
-                                            Kup za {item.price} XP
-                                        </Button>
+                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>Kup za {item.price} XP</Button>
                                     )}
-                                </Card>
+                                </div>
                             );
                         })}
                         
-                        {/* Sekcja: Skórki */}
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className="text-xl font-bold text-gray-700 border-b-2 border-gray-100 pb-2 mb-4">Wygląd Przycisków</h3></div>
+                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Wygląd Przycisków</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'skin').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeSkin === item.content;
                             return (
-                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-gray-100'}`}>
+                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className="mb-4"><button className={`px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white ${item.content}`}>Przycisk</button></div>
-                                    <h4 className="font-bold text-lg">{item.name}</h4>
+                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
                                     <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
                                     {isOwned ? (
-                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">
-                                            {isEquipped ? 'Używasz' : 'Wybierz'}
-                                        </Button>
+                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? 'Używasz' : 'Wybierz'}</Button>
                                     ) : (
-                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>
-                                            Kup za {item.price} XP
-                                        </Button>
+                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>Kup za {item.price} XP</Button>
                                     )}
-                                </Card>
+                                </div>
                             );
                         })}
                     </div>
@@ -399,16 +490,18 @@
                 <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">Matematyczna Galaktyka</h1>
               </div>
               
-              <div className="w-full max-w-2xl"><DailyLeaderboard users={users} currentUserId={currentUser?.id} /></div>
-              
-              <p className="text-indigo-600 text-lg font-medium mb-4">Wybierz pilota misji:</p>
+              {/* SEKCJA MARKETINGOWA - widoczna tylko gdy nie ma użytkowników */}
+              {users.length === 0 ? (
+                <MarketingSection />
+              ) : (
+                <>
+                    <div className="w-full max-w-2xl"><DailyLeaderboard users={users} currentUserId={currentUser?.id} /></div>
+                    <p className="text-indigo-600 text-lg font-medium mb-4">Wybierz pilota misji:</p>
+                </>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mb-8">
-                {users.length === 0 && (
-                  <div className="col-span-1 sm:col-span-2 text-center text-gray-500 italic mb-4 bg-white/50 p-4 rounded-xl">
-                    Brak zapisanych profili. Stwórz pierwszego kosmonautę!
-                  </div>
-                )}
+                {/* Nie wyświetlamy komunikatu "Brak zapisanych profili", bo zastępuje go sekcja marketingowa */}
                 {users.map(user => (
                   <div key={user.id} className="relative group">
                     <button onClick={() => { SoundManager.playClick(); onLogin(user); }} className={`w-full bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center gap-4 text-left border-4 ${currentUser?.id === user.id ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
@@ -430,7 +523,7 @@
           );
         };
 
-        const DashboardScreen = ({ currentUser, users, onChangeProfile, onSelectMode, onShowRanks, onShowShop }) => {
+        const DashboardScreen = ({ currentUser, users, onChangeProfile, onSelectMode, onShowRanks, onShowShop, onShowAchievements }) => {
           const xpForRank = currentUser.totalXp || currentUser.xp;
           const rank = getRank(xpForRank);
           const nextRank = getNextRank(xpForRank);
@@ -450,6 +543,7 @@
                    </div>
                    <div className="flex gap-2">
                        <button onClick={() => { SoundManager.playClick(); onShowShop(); }} className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-white/30"><Icon name="ShoppingBag" size={16} /> Sklep</button>
+                       <button onClick={() => { SoundManager.playClick(); onShowAchievements(); }} className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-white/30"><Icon name="Medal" size={16} /> Chwała</button>
                        <button onClick={onChangeProfile} className="bg-indigo-700/50 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-indigo-500"><Icon name="User" size={16} /> Zmień</button>
                    </div>
                 </div>
@@ -578,13 +672,16 @@
         };
 
         const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName }) => {
+            const [sessionCorrectTimestamps, setSessionCorrectTimestamps] = useState([]);
+
             if (!question) return <div className="min-h-screen flex items-center justify-center bg-indigo-50 font-bold text-indigo-500">Ładowanie misji...</div>;
 
-            // Obsługa klawiatury
             useEffect(() => {
                 const handleKeyDown = (e) => {
                     if (e.key === 'Enter') {
-                        if (userAnswer && feedback !== 'correct') onCheckAnswer();
+                        if (userAnswer && feedback !== 'correct') {
+                            onCheckAnswer(sessionCorrectTimestamps, setSessionCorrectTimestamps);
+                        }
                     } else if (e.key === 'Backspace') {
                         onAnswerChange('backspace');
                     } else if (!isNaN(parseInt(e.key))) {
@@ -593,7 +690,11 @@
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [userAnswer, feedback]);
+            }, [userAnswer, feedback, sessionCorrectTimestamps]);
+
+            const handleCheckAnswer = () => {
+                onCheckAnswer(sessionCorrectTimestamps, setSessionCorrectTimestamps);
+            }
 
             if (question.type === 'sequence') {
                 const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
@@ -636,7 +737,7 @@
                         ))}
                         <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={onCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
                         </div>
                     </div>
                     </div>
@@ -683,7 +784,7 @@
                         ))}
                         <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={onCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
                         </div>
                     </div>
                     </div>
@@ -729,7 +830,7 @@
                     ))}
                     <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                     <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                    <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={onCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                    <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
                     </div>
                 </div>
                 </div>
@@ -799,17 +900,39 @@
           const [feedback, setFeedback] = useState(null);
           const [gameStats, setGameStats] = useState({ correct: 0, total: 0, xpGained: 0 });
           const [userToDelete, setUserToDelete] = useState(null);
+          const [justUnlockedAchievement, setJustUnlockedAchievement] = useState(null);
 
+          // Inicjalizacja danych z Dexie
           useEffect(() => {
-            try {
-              localStorage.setItem('mathGalaxyUsers', JSON.stringify(users));
-            } catch (e) {
-              console.error("Błąd zapisu localStorage:", e);
-            }
-          }, [users]);
+            const loadUsers = async () => {
+              try {
+                const allUsers = await db.users.toArray();
+                setUsers(allUsers);
+              } catch (e) {
+                console.error("Błąd wczytywania użytkowników:", e);
+              }
+            };
+            loadUsers();
+          }, []);
 
           const handleCreateUser = async (name, avatar) => {
-            const newUser = { id: Date.now(), name, avatar, xp: 0, totalXp: 0, streak: 0, lastPlayed: null, dailyXp: 0, dailyGoalReached: false, history: [], unlockedItems: [], activeBackground: '', activeSkin: '' };
+            const newUser = { 
+                id: Date.now(), 
+                name, 
+                avatar, 
+                xp: 0, 
+                totalXp: 0, 
+                streak: 0, 
+                lastPlayed: null, 
+                dailyXp: 0, 
+                dailyGoalReached: false, 
+                history: [], 
+                unlockedItems: [], 
+                activeBackground: '', 
+                activeSkin: '', 
+                achievements: [], 
+                consecutiveCorrect: 0 
+            };
             try {
               const id = await db.users.add(newUser);
               const userWithId = { ...newUser, id };
@@ -869,7 +992,6 @@
 
               const updatedUser = { ...currentUser, xp: currentUser.xp - item.price, unlockedItems: [...(currentUser.unlockedItems || []), item.id] };
               
-              // Automatyczne wyposażenie
               if (item.type === 'avatar') updatedUser.avatar = item.content;
               if (item.type === 'background') updatedUser.activeBackground = item.content;
               if (item.type === 'skin') updatedUser.activeSkin = item.content;
@@ -894,6 +1016,61 @@
                   setCurrentUser(updatedUser);
                   setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
               } catch (e) { console.error("Błąd wyposażania:", e); }
+          };
+
+          const checkAchievements = async (user, sessionCorrectTimestamps) => {
+              let newAchievements = [];
+              let updatedUser = { ...user };
+
+              // 1. Pierwszy Krok
+              if (!user.achievements.includes('first_step')) {
+                  newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'first_step'));
+                  updatedUser.achievements.push('first_step');
+              }
+
+              // 2. Szybki jak kometa (10 w minutę)
+              if (!user.achievements.includes('speedster') && sessionCorrectTimestamps.length >= 10) {
+                  const last10 = sessionCorrectTimestamps.slice(-10);
+                  const timeDiff = last10[last10.length - 1] - last10[0];
+                  if (timeDiff <= 60000) { // 60 sekund
+                      newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'speedster'));
+                      updatedUser.achievements.push('speedster');
+                  }
+              }
+
+              // 3. Bezbłędny Lot (50 z rzędu)
+              if (!user.achievements.includes('flawless') && user.consecutiveCorrect >= 50) {
+                  newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'flawless'));
+                  updatedUser.achievements.push('flawless');
+              }
+
+              // 4. Nocny Marek (po 20:00)
+              if (!user.achievements.includes('night_owl') && new Date().getHours() >= 20) {
+                  newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'night_owl'));
+                  updatedUser.achievements.push('night_owl');
+              }
+
+              // 5. Mistrz Liczb (1000 XP)
+              if (!user.achievements.includes('math_master') && (user.totalXp || user.xp) >= 1000) {
+                  newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'math_master'));
+                  updatedUser.achievements.push('math_master');
+              }
+
+              if (newAchievements.length > 0) {
+                  setJustUnlockedAchievement(newAchievements[0]); // Pokaż tylko pierwszy
+                  SoundManager.playAchievement();
+                  confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+                  
+                  // Zapisz zmiany w bazie
+                  try {
+                    await db.users.update(user.id, { achievements: updatedUser.achievements });
+                    // Zaktualizuj stan lokalny użytkownika
+                    setCurrentUser(prev => ({ ...prev, achievements: updatedUser.achievements }));
+                    setUsers(prev => prev.map(u => u.id === user.id ? { ...u, achievements: updatedUser.achievements } : u));
+                  } catch (e) {
+                    console.error("Błąd zapisu osiągnięć:", e);
+                  }
+              }
           };
 
           const updateUserProgress = async (xpGained) => {
@@ -1054,17 +1231,43 @@
             if (val === 'backspace') setUserAnswer(prev => prev.slice(0, -1));
             else if (userAnswer.length < 4) setUserAnswer(prev => prev + val);
           };
-          const checkAnswer = () => {
+          const checkAnswer = (sessionCorrectTimestamps, setSessionCorrectTimestamps) => {
             const val = parseInt(userAnswer);
             if (isNaN(val)) return;
             const isCorrect = val === question.answer;
             const xpChange = isCorrect ? 10 : -5;
             
+            let updatedUser = { ...currentUser }; // Copy current user to update streak
+            
             if (isCorrect) {
                 SoundManager.playSuccess();
+                // Update streak for achievements
+                updatedUser.consecutiveCorrect = (updatedUser.consecutiveCorrect || 0) + 1;
+                // Update session timestamps for speedster achievement
+                const now = Date.now();
+                // FIX for iterable undefined: Add safe check and default empty array
+                const currentTimestamps = Array.isArray(sessionCorrectTimestamps) ? sessionCorrectTimestamps : [];
+                const newTimestamps = [...currentTimestamps, now].filter(t => now - t <= 60000); // Keep last 60s
+                
+                if (setSessionCorrectTimestamps) {
+                    setSessionCorrectTimestamps(newTimestamps);
+                }
+                
+                // Check for achievements immediately
+                checkAchievements(updatedUser, newTimestamps);
             } else {
                 SoundManager.playError();
+                updatedUser.consecutiveCorrect = 0; // Reset streak on error
             }
+
+            // Update user in state and DB (for streak persistence)
+            // Note: we are doing optimistic update here for consecutiveCorrect to make it snappy
+            // Actual XP update happens on finishGame, but streak resets immediately
+             try {
+               db.users.update(currentUser.id, { consecutiveCorrect: updatedUser.consecutiveCorrect });
+               setCurrentUser(prev => ({ ...prev, consecutiveCorrect: updatedUser.consecutiveCorrect }));
+            } catch (e) { console.error(e); }
+
 
             setFeedback(isCorrect ? 'correct' : 'wrong');
             setGameStats(prev => ({ correct: prev.correct + (isCorrect ? 1 : 0), total: prev.total + 1, xpGained: prev.xpGained + xpChange }));
@@ -1076,13 +1279,20 @@
           return (
             <div className="font-sans text-slate-800 select-none">
               {view === 'profiles' && <ProfilesScreen users={users} currentUser={currentUser} onLogin={loginUser} onCreate={handleCreateUser} onDelete={handleDeleteUserClick} onCancelCreate={() => setView('dashboard')} />}
-              {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} onShowShop={() => setView('shop')} />}
+              {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} onShowShop={() => setView('shop')} onShowAchievements={() => setView('achievements')} />}
               {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.totalXp || currentUser.xp} onReturn={() => setView('dashboard')} />}
               {view === 'shop' && currentUser && <ShopScreen user={currentUser} onBuy={handleBuyItem} onEquip={handleEquipItem} onReturn={() => setView('dashboard')} />}
+              {view === 'achievements' && currentUser && <AchievementsScreen user={currentUser} onReturn={() => setView('dashboard')} />}
               {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} />}
               {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} />}
               {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} />}
               <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} />
+              
+              {/* MODAL ODBLOKOWANIA ODZNAKI */}
+              <AchievementUnlockedModal 
+                achievement={justUnlockedAchievement} 
+                onClose={() => setJustUnlockedAchievement(null)} 
+              />
             </div>
           );
         }
