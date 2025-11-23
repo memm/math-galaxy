@@ -10,6 +10,8 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Dexie DB (Baza danych) -->
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
     
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -29,6 +31,12 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
+
+        // --- KONFIGURACJA DEXIE DB ---
+        const db = new Dexie('MathGalaxyDB');
+        db.version(1).stores({
+            users: '++id, name, xp, streak, lastPlayed' // id jest autoincrement (++)
+        });
 
         // --- STAŁE I DANE ---
 
@@ -180,9 +188,9 @@
           const [newName, setNewName] = useState('');
           const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
 
-          const handleCreateClick = () => {
+          const handleCreateClick = async () => {
             if (!newName.trim()) return;
-            onCreate(newName, selectedAvatar);
+            await onCreate(newName, selectedAvatar);
             setIsCreating(false);
             setNewName('');
           };
@@ -233,7 +241,7 @@
                 <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">Matematyczna Galaktyka</h1>
               </div>
               
-              {/* RANKING DNIA */}
+              {/* RANKING DNIA - PRZENIESIONY TUTAJ */}
               <div className="w-full max-w-2xl">
                 <DailyLeaderboard users={users} currentUserId={currentUser?.id} />
               </div>
@@ -593,15 +601,8 @@
         // --- GŁÓWNY KOMPONENT ---
 
         function MathGalaxy() {
-          const [users, setUsers] = useState(() => {
-            try {
-              const saved = localStorage.getItem('mathGalaxyUsers');
-              return saved ? JSON.parse(saved) : [];
-            } catch (e) {
-              console.error("Błąd odczytu localStorage:", e);
-              return [];
-            }
-          });
+          const [users, setUsers] = useState([]);
+          
           const [view, setView] = useState('profiles');
           const [currentUser, setCurrentUser] = useState(null);
           const [gameMode, setGameMode] = useState(null);
@@ -612,44 +613,78 @@
           const [gameStats, setGameStats] = useState({ correct: 0, total: 0, xpGained: 0 });
           const [userToDelete, setUserToDelete] = useState(null);
 
+          // Inicjalizacja danych z Dexie
           useEffect(() => {
-            try {
-              localStorage.setItem('mathGalaxyUsers', JSON.stringify(users));
-            } catch (e) {
-              console.error("Błąd zapisu localStorage:", e);
-            }
-          }, [users]);
+            const loadUsers = async () => {
+              try {
+                const allUsers = await db.users.toArray();
+                setUsers(allUsers);
+              } catch (e) {
+                console.error("Błąd wczytywania użytkowników:", e);
+              }
+            };
+            loadUsers();
+          }, []);
 
-          const handleCreateUser = (name, avatar) => {
-            const newUser = { id: Date.now(), name, avatar, xp: 0, streak: 0, lastPlayed: null, dailyXp: 0, dailyGoalReached: false, history: [] };
-            const updatedUsers = [...users, newUser];
-            setUsers(updatedUsers);
-            loginUser(newUser, updatedUsers);
-          };
-          const handleDeleteUserClick = (userId) => setUserToDelete(userId);
-          const confirmDeleteUser = () => {
-            if (userToDelete) {
-                const updatedUsers = users.filter(u => u.id !== userToDelete);
-                setUsers(updatedUsers);
-                if (currentUser?.id === userToDelete) setCurrentUser(null);
-                setUserToDelete(null);
+          const handleCreateUser = async (name, avatar) => {
+            const newUser = { name, avatar, xp: 0, streak: 0, lastPlayed: null, dailyXp: 0, dailyGoalReached: false };
+            try {
+              const id = await db.users.add(newUser);
+              const userWithId = { ...newUser, id };
+              setUsers([...users, userWithId]);
+              loginUser(userWithId, [...users, userWithId]);
+            } catch (e) {
+              console.error("Błąd tworzenia użytkownika:", e);
             }
           };
-          const loginUser = (user, currentUsersList = users) => {
+
+          const handleDeleteUserClick = (userId) => setUserToDelete(userId);
+          
+          const confirmDeleteUser = async () => {
+            if (userToDelete) {
+                try {
+                  await db.users.delete(userToDelete);
+                  const updatedUsers = users.filter(u => u.id !== userToDelete);
+                  setUsers(updatedUsers);
+                  if (currentUser?.id === userToDelete) setCurrentUser(null);
+                  setUserToDelete(null);
+                } catch (e) {
+                  console.error("Błąd usuwania użytkownika:", e);
+                }
+            }
+          };
+
+          const loginUser = async (user, currentUsersList = users) => {
             const today = new Date().toDateString();
             let updatedUser = { ...user };
+            let needsUpdate = false;
+
             if (user.lastPlayed !== today) {
                updatedUser.dailyXp = 0;
                updatedUser.dailyGoalReached = false;
                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-               if (user.lastPlayed && user.lastPlayed !== yesterday.toDateString()) updatedUser.streak = 0; 
+               if (user.lastPlayed && user.lastPlayed !== yesterday.toDateString()) {
+                  updatedUser.streak = 0; 
+               }
+               needsUpdate = true;
             }
-            const updatedList = currentUsersList.map(u => u.id === user.id ? updatedUser : u);
-            setUsers(updatedList);
+            
+            if (needsUpdate) {
+              try {
+                await db.users.update(user.id, updatedUser);
+                // Aktualizuj też listę w pamięci, aby UI było spójne
+                const updatedList = currentUsersList.map(u => u.id === user.id ? updatedUser : u);
+                setUsers(updatedList);
+              } catch (e) {
+                console.error("Błąd aktualizacji logowania:", e);
+              }
+            }
+
             setCurrentUser(updatedUser);
             setView('dashboard');
           };
-          const updateUserProgress = (xpGained) => {
+
+          const updateUserProgress = async (xpGained) => {
             if (!currentUser) return;
             const today = new Date().toDateString();
             let updatedUser = { ...currentUser };
@@ -658,197 +693,175 @@
             updatedUser.dailyXp = Math.max(0, newDailyXp);
             updatedUser.lastPlayed = today;
             if (updatedUser.dailyXp >= DAILY_XP_GOAL && !updatedUser.dailyGoalReached) {
-       updatedUser.streak += 1;
-       updatedUser.dailyGoalReached = true;
-    }
-    setCurrentUser(updatedUser);
-    setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
-  };
-
-  const generateQuestion = (mode, difficulty) => {
-    const maxVal = DIFFICULTY_LEVELS[difficulty].max;
-    let a = 1, b = 1, operator = '+', result = 2, answer = 2;
-    let missing = 'result';
-    
-    let minVal = 1;
-    if (difficulty === 'medium') minVal = 10;
-    if (difficulty === 'hard') minVal = 100;
-
-    const generateRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-    // Logika dla Szyfrowania Sygnału (Ciągi Liczbowe)
-    if (mode === 'sequences') {
-        let seq = [];
-        let step, start, type;
-        
-        if (difficulty === 'easy') {
-            type = 'arithmetic';
-            step = generateRandom(1, 5);
-            start = generateRandom(1, 10);
-        } else if (difficulty === 'medium') {
-            // 70% arytmetyczny, 30% geometryczny (prosty)
-            type = Math.random() > 0.3 ? 'arithmetic' : 'geometric';
-            if (type === 'arithmetic') {
-                step = generateRandom(3, 10);
-                start = generateRandom(5, 30);
-            } else {
-                step = 2;
-                start = generateRandom(2, 10);
+               updatedUser.streak += 1;
+               updatedUser.dailyGoalReached = true;
             }
-        } else { // hard
-            type = Math.random() > 0.5 ? 'arithmetic' : 'geometric';
-            if (type === 'arithmetic') {
-                step = generateRandom(7, 25);
-                start = generateRandom(20, 100);
-            } else {
-                step = generateRandom(2, 3);
-                start = generateRandom(3, 15);
+            
+            try {
+               await db.users.update(currentUser.id, updatedUser);
+               setCurrentUser(updatedUser);
+               setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
+            } catch (e) {
+               console.error("Błąd aktualizacji postępu:", e);
             }
+          };
+
+          const generateQuestion = (mode, difficulty) => {
+            const maxVal = DIFFICULTY_LEVELS[difficulty].max;
+            let a = 1, b = 1, operator = '+', result = 2, answer = 2;
+            let missing = 'result';
+            
+            let minVal = 1;
+            if (difficulty === 'medium') minVal = 10;
+            if (difficulty === 'hard') minVal = 100;
+
+            const generateRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+            if (mode === 'sequences') {
+                let seq = [];
+                let step, start, type;
+                if (difficulty === 'easy') {
+                    type = 'arithmetic';
+                    step = generateRandom(1, 5);
+                    start = generateRandom(1, 10);
+                } else if (difficulty === 'medium') {
+                    type = Math.random() > 0.3 ? 'arithmetic' : 'geometric';
+                    if (type === 'arithmetic') { step = generateRandom(3, 10); start = generateRandom(5, 30); } 
+                    else { step = 2; start = generateRandom(2, 10); }
+                } else { 
+                    type = Math.random() > 0.5 ? 'arithmetic' : 'geometric';
+                    if (type === 'arithmetic') { step = generateRandom(7, 25); start = generateRandom(20, 100); } 
+                    else { step = generateRandom(2, 3); start = generateRandom(3, 15); }
+                }
+
+                let current = start;
+                for(let i=0; i<4; i++) {
+                    seq.push(current);
+                    if (type === 'arithmetic') current += step;
+                    else current *= step;
+                }
+                answer = current;
+                setQuestion({ sequence: seq, type: 'sequence', answer: answer, missing: 'next' });
+                setUserAnswer('');
+                setFeedback(null);
+                return;
+            }
+            
+            let actualMode = mode;
+            if (mode === 'unknown') {
+                const modes = ['add', 'sub', 'mul'];
+                actualMode = modes[Math.floor(Math.random() * modes.length)];
+            }
+
+            if (mode === 'order') {
+                if (difficulty === 'easy') {
+                     let n1 = generateRandom(2, 10); let n2 = generateRandom(2, 5); let n3 = generateRandom(2, 5);
+                     let expression = `${n1} + ${n2} × ${n3}`; answer = n1 + (n2 * n3);
+                     setQuestion({ type: 'order', expression, answer });
+                } else if (difficulty === 'medium') {
+                     let n3 = generateRandom(2, 5); let target = generateRandom(2, 10); let sum = n3 * target;
+                     let n1 = generateRandom(1, sum - 1); let n2 = sum - n1;
+                     let expression = `(${n1} + ${n2}) : ${n3}`; answer = target;
+                     setQuestion({ type: 'order', expression, answer });
+                } else {
+                    let n1 = generateRandom(5, 20); let n2 = generateRandom(2, 9); let n3 = generateRandom(2, 9); let n4 = generateRandom(1, 10);
+                    let expression = `${n1} + ${n2} × ${n3} - ${n4}`; answer = n1 + (n2 * n3) - n4;
+                    setQuestion({ type: 'order', expression, answer });
+                }
+                setUserAnswer('');
+                setFeedback(null);
+                return;
+            }
+
+            switch (actualMode) {
+              case 'add':
+                a = generateRandom(minVal, Math.floor(maxVal * 0.7));
+                b = generateRandom(minVal, maxVal - a);
+                operator = '+';
+                result = a + b;
+                break;
+              case 'sub':
+                a = generateRandom(minVal, maxVal);
+                b = generateRandom(1, a - (maxVal > 10 ? 1 : 0));
+                operator = '-';
+                result = a - b;
+                break;
+              case 'mul':
+                let maxFactor = Math.min(12, Math.floor(maxVal / 2));
+                if (difficulty === 'easy') maxFactor = Math.min(10, maxVal);
+                a = generateRandom(1, maxFactor);
+                b = generateRandom(1, maxFactor);
+                if (a * b > maxVal) a = generateRandom(1, Math.floor(maxVal / b));
+                operator = '×';
+                result = a * b;
+                break;
+              case 'div':
+                let divisorMax = Math.min(12, maxVal);
+                if (difficulty === 'easy') divisorMax = Math.min(10, maxVal);
+                b = generateRandom(2, divisorMax);
+                result = generateRandom(1, divisorMax); 
+                a = b * result;
+                operator = ':';
+                if (a > maxVal) {
+                    const maxResult = Math.floor(maxVal / b);
+                    result = generateRandom(1, Math.max(1, maxResult));
+                    a = b * result;
+                }
+                break;
+            }
+            if (isNaN(a) || isNaN(b)) { a = 1; b = 1; result = 2; }
+
+            let term1 = a;
+            let term2 = b;
+
+            if (mode === 'unknown') {
+                missing = Math.random() > 0.5 ? 'term1' : 'term2';
+                answer = (missing === 'term1') ? term1 : term2;
+            } else {
+                missing = 'result';
+                answer = result;
+            }
+            setQuestion({ term1, operator, term2, result, missing, answer });
+            setUserAnswer('');
+            setFeedback(null);
+          };
+
+          const handleSelectMode = (mode) => { setGameMode(mode); setGameDifficulty(null); setView('selectLevel'); };
+          const startGame = (mode, difficulty) => {
+            setGameMode(mode);
+            setGameDifficulty(difficulty);
+            setGameStats({ correct: 0, total: 0, xpGained: 0 });
+            setView('game');
+            generateQuestion(mode, difficulty);
+          };
+          const handleGameInput = (val) => {
+            if (val === 'backspace') setUserAnswer(prev => prev.slice(0, -1));
+            else if (userAnswer.length < 4) setUserAnswer(prev => prev + val);
+          };
+          const checkAnswer = () => {
+            const val = parseInt(userAnswer);
+            if (isNaN(val)) return;
+            const isCorrect = val === question.answer;
+            const xpChange = isCorrect ? 10 : -5;
+            setFeedback(isCorrect ? 'correct' : 'wrong');
+            setGameStats(prev => ({ correct: prev.correct + (isCorrect ? 1 : 0), total: prev.total + 1, xpGained: prev.xpGained + xpChange }));
+            if (isCorrect) setTimeout(() => generateQuestion(gameMode, gameDifficulty), 1000);
+          };
+          const finishGame = () => { updateUserProgress(gameStats.xpGained); setView('summary'); };
+          const currentDifficultyName = gameDifficulty ? DIFFICULTY_LEVELS[gameDifficulty].name : 'Nieznany';
+
+          return (
+            <div className="font-sans text-slate-800 select-none">
+              {view === 'profiles' && <ProfilesScreen users={users} currentUser={currentUser} onLogin={loginUser} onCreate={handleCreateUser} onDelete={handleDeleteUserClick} onCancelCreate={() => setView('dashboard')} />}
+              {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} />}
+              {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.xp} onReturn={() => setView('dashboard')} />}
+              {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} />}
+              {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} />}
+              {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} />}
+              <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} />
+            </div>
+          );
         }
-
-        let current = start;
-        // Generujemy 4 wyrazy, piąty do odgadnięcia
-        for(let i=0; i<4; i++) {
-            seq.push(current);
-            if (type === 'arithmetic') current += step;
-            else current *= step;
-        }
-        answer = current; // To jest brakująca liczba
-        
-        setQuestion({ sequence: seq, type: 'sequence', answer: answer, missing: 'next' });
-        setUserAnswer('');
-        setFeedback(null);
-        return;
-    }
-    
-    let actualMode = mode;
-    if (mode === 'unknown') {
-        const modes = ['add', 'sub', 'mul'];
-        actualMode = modes[Math.floor(Math.random() * modes.length)];
-    }
-
-    // Logika dla Kod Startowy (Kolejność działań)
-    if (mode === 'order') {
-        if (difficulty === 'easy') {
-             let n1 = generateRandom(2, 10);
-             let n2 = generateRandom(2, 5);
-             let n3 = generateRandom(2, 5);
-             let expression = `${n1} + ${n2} × ${n3}`;
-             answer = n1 + (n2 * n3);
-             setQuestion({ type: 'order', expression, answer });
-        } else if (difficulty === 'medium') {
-             let n3 = generateRandom(2, 5);
-             let target = generateRandom(2, 10);
-             let sum = n3 * target;
-             let n1 = generateRandom(1, sum - 1);
-             let n2 = sum - n1;
-             let expression = `(${n1} + ${n2}) : ${n3}`;
-             answer = target;
-             setQuestion({ type: 'order', expression, answer });
-        } else {
-            let n1 = generateRandom(5, 20);
-            let n2 = generateRandom(2, 9);
-            let n3 = generateRandom(2, 9);
-            let n4 = generateRandom(1, 10);
-            let expression = `${n1} + ${n2} × ${n3} - ${n4}`;
-            answer = n1 + (n2 * n3) - n4;
-            setQuestion({ type: 'order', expression, answer });
-        }
-        setUserAnswer('');
-        setFeedback(null);
-        return;
-    }
-
-    switch (actualMode) {
-      case 'add':
-        a = generateRandom(minVal, Math.floor(maxVal * 0.7));
-        b = generateRandom(minVal, maxVal - a);
-        operator = '+';
-        result = a + b;
-        break;
-      case 'sub':
-        a = generateRandom(minVal, maxVal);
-        b = generateRandom(1, a - (maxVal > 10 ? 1 : 0));
-        operator = '-';
-        result = a - b;
-        break;
-      case 'mul':
-        let maxFactor = Math.min(12, Math.floor(maxVal / 2));
-        if (difficulty === 'easy') maxFactor = Math.min(10, maxVal);
-        a = generateRandom(1, maxFactor);
-        b = generateRandom(1, maxFactor);
-        if (a * b > maxVal) a = generateRandom(1, Math.floor(maxVal / b));
-        operator = '×';
-        result = a * b;
-        break;
-      case 'div':
-        let divisorMax = Math.min(12, maxVal);
-        if (difficulty === 'easy') divisorMax = Math.min(10, maxVal);
-        b = generateRandom(2, divisorMax);
-        result = generateRandom(1, divisorMax); 
-        a = b * result;
-        operator = ':';
-        if (a > maxVal) {
-            const maxResult = Math.floor(maxVal / b);
-            result = generateRandom(1, Math.max(1, maxResult));
-            a = b * result;
-        }
-        break;
-    }
-    // Fallback safety
-    if (isNaN(a) || isNaN(b)) { a = 1; b = 1; result = 2; }
-
-    let term1 = a;
-    let term2 = b;
-
-    if (mode === 'unknown') {
-        missing = Math.random() > 0.5 ? 'term1' : 'term2';
-        answer = (missing === 'term1') ? term1 : term2;
-    } else {
-        missing = 'result';
-        answer = result;
-    }
-    setQuestion({ term1, operator, term2, result, missing, answer });
-    setUserAnswer('');
-    setFeedback(null);
-  };
-
-  const handleSelectMode = (mode) => { setGameMode(mode); setGameDifficulty(null); setView('selectLevel'); };
-  const startGame = (mode, difficulty) => {
-    setGameMode(mode);
-    setGameDifficulty(difficulty);
-    setGameStats({ correct: 0, total: 0, xpGained: 0 });
-    setView('game');
-    generateQuestion(mode, difficulty);
-  };
-  const handleGameInput = (val) => {
-    if (val === 'backspace') setUserAnswer(prev => prev.slice(0, -1));
-    else if (userAnswer.length < 4) setUserAnswer(prev => prev + val);
-  };
-  const checkAnswer = () => {
-    const val = parseInt(userAnswer);
-    if (isNaN(val)) return;
-    const isCorrect = val === question.answer;
-    const xpChange = isCorrect ? 10 : -5;
-    setFeedback(isCorrect ? 'correct' : 'wrong');
-    setGameStats(prev => ({ correct: prev.correct + (isCorrect ? 1 : 0), total: prev.total + 1, xpGained: prev.xpGained + xpChange }));
-    if (isCorrect) setTimeout(() => generateQuestion(gameMode, gameDifficulty), 1000);
-  };
-  const finishGame = () => { updateUserProgress(gameStats.xpGained); setView('summary'); };
-  const currentDifficultyName = gameDifficulty ? DIFFICULTY_LEVELS[gameDifficulty].name : 'Nieznany';
-
-  return (
-    <div className="font-sans text-slate-800 select-none">
-      {view === 'profiles' && <ProfilesScreen users={users} currentUser={currentUser} onLogin={loginUser} onCreate={handleCreateUser} onDelete={handleDeleteUserClick} onCancelCreate={() => setView('dashboard')} />}
-      {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} />}
-      {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.xp} onReturn={() => setView('dashboard')} />}
-      {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} />}
-      {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} />}
-      {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} />}
-      <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} />
-    </div>
-  );
-}
 
         const domNode = document.getElementById('root');
         const root = ReactDOM.createRoot(domNode);
@@ -856,5 +869,3 @@
     </script>
 </body>
 </html>
-
-
