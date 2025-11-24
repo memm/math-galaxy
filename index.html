@@ -15,6 +15,9 @@
     <!-- Canvas Confetti (Animacje cząsteczkowe) -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <!-- NOWY FAVICON: Używamy zewnętrznego URL, aby uniknąć problemów z ładowaniem Base64 w niektórych przeglądarkach -->
+    <link rel="icon" href="https://memm.github.io/math-galaxy/favicon.png">
+    
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -36,29 +39,6 @@
         /* Style dla skórek przycisków (nadpisują domyślne) */
         .btn-theme-neon { border-color: #39ff14 !important; box-shadow: 0 0 10px #39ff14 !important; }
         .btn-theme-gold { border-color: #ffd700 !important; border-width: 4px !important; }
-        
-        /* Styl dla nowego obrazka na stronie głównej */
-        .hero-image-container {
-            width: 256px; /* Wymiary oryginalnego Jowisza */
-            height: 256px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            /* Fioletowy blask */
-            box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); 
-            border-radius: 50%;
-            overflow: hidden;
-        }
-        .hero-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            position: relative;
-            z-index: 10;
-        }
     </style>
 </head>
 <body>
@@ -738,13 +718,11 @@
                  </div>
               )}
               <div className="text-center mb-8 mt-8">
+                {/* TUTAJ NOWA GRAFIKA */}
                 <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center relative">
-                    {/* Wstawienie nowego obrazka z URL */}
                     <img 
                         src="https://memm.github.io/math-galaxy/math-galaxy-hero-image-small.png"
                         alt="Ilustracja rakiety i planet dla Matematycznej Galaktyki"
-                        className="hero-image"
-                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/256x256/8B5CF6/ffffff?text=MATH+GALAXY'; }}
                     />
                 </div>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">{t('app_title')}</h1>
