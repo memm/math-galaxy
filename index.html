@@ -44,6 +44,218 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
+        // --- TŁUMACZENIA ---
+        const TRANSLATIONS = {
+            pl: {
+                app_title: "Matematyczna Galaktyka",
+                select_pilot: "Wybierz pilota misji:",
+                new_astronaut: "Nowy Astronauta",
+                choose_look: "Wybierz swój wygląd:",
+                your_name: "Twoje imię",
+                cancel: "Anuluj",
+                create: "Stwórz",
+                welcome: "Cześć",
+                rank: "Ranga",
+                level: "Poziom",
+                xp: "XP",
+                streak: "Dni z rzędu",
+                goal: "Cel",
+                daily_goal: "Cel Dnia",
+                daily_goal_desc: "Zdobądź XP, aby zaliczyć dzień!",
+                achieved: "Zaliczono!",
+                missing_xp: "Brakuje jeszcze",
+                change_profile: "Zmień",
+                shop: "Sklep",
+                achievements: "Chwała",
+                wallet: "Twój Portfel",
+                buy_for: "Kup za",
+                equipped: "Używasz",
+                equip: "Wybierz",
+                mission_basic: "Wybierz misję podstawową:",
+                mission_super: "Wybierz super misję:",
+                mode_add: "Dodawanie",
+                mode_sub: "Odejmowanie",
+                mode_mul: "Mnożenie",
+                mode_div: "Dzielenie",
+                mode_unknown: "Tajemnica Czarnej Dziury",
+                mode_sequences: "Szyfrowanie Sygnału",
+                mode_order: "Kod Startowy",
+                desc_add: "Misja: Suma składników",
+                desc_sub: "Misja: Redukcja liczebności",
+                desc_mul: "Misja: Szybki wzrost",
+                desc_div: "Misja: Równy podział",
+                desc_unknown: "Znajdź brakującą liczbę",
+                desc_sequences: "Odkryj kolejną liczbę!",
+                desc_order: "Uruchom silniki! Kolejność działań.",
+                difficulty_easy: "Łatwy (Ziemia)",
+                difficulty_medium: "Średni (Mars)",
+                difficulty_hard: "Trudny (Jowisz)",
+                desc_easy: "Liczby do 30.",
+                desc_medium: "Liczby dwucyfrowe.",
+                desc_hard: "Liczby trzycyfrowe.",
+                check: "SPRAWDŹ",
+                mission_abort: "Przerwij misję",
+                great: "Świetnie! +10 XP",
+                try_again: "Spróbuj jeszcze raz!",
+                mission_complete: "Misja Zakończona!",
+                earned_xp: "Zdobyte XP",
+                correct_answers: "Poprawne",
+                back_to_base: "Wróć do Bazy",
+                leaderboard_title: "Ranking Dnia",
+                leaderboard_desc: "Kto dzisiaj trenował najciężej?",
+                you: "(Ty)",
+                delete_confirm_title: "Usunąć profil?",
+                delete_confirm_desc: "Czy na pewno chcesz usunąć tego astronautę? Wszystkie zdobyte gwiazdki przepadną!",
+                delete_yes: "Tak, usuń",
+                delete_no: "Nie, zachowaj",
+                new_badge: "Nowa Odznaka!",
+                super: "Super!",
+                shop_title: "Kosmiczny Sklepik",
+                shop_desc: "Wydawaj XP na nagrody! Ranga nie spadnie.",
+                cat_avatars: "Nowe Postacie",
+                cat_backgrounds: "Kosmiczne Tła",
+                cat_skins: "Wygląd Przycisków",
+                achievements_title: "Galeria Chwały",
+                ach_earned: "Zdobyte!",
+                hero_title: "Zostań Bohaterem!",
+                hero_desc: "Ćwicz mózg i pokonuj wyzwania!",
+                prizes_title: "Zbieraj Nagrody!",
+                prizes_desc: "Zdobywaj puchary i odznaki!",
+                shop_card_title: "Kosmiczny Sklep!",
+                shop_card_desc: "Wymieniaj punkty na nowe postacie!",
+                start_prompt: "Gotowy na start? Stwórz profil i ruszaj w drogę!",
+                rank_cadet: "Kadet",
+                rank_pilot: "Pilot",
+                rank_astronaut: "Astronauta",
+                rank_captain: "Kapitan",
+                rank_commander: "Komandor",
+                rank_admiral: "Admirał Galaktyki",
+                finish_signal: "Dokończ sygnał:",
+                calc_code: "Oblicz kod startowy:",
+                solve_equation: "Rozwiąż równanie:",
+                item_alien: "Kosmita", item_alien_desc: "Przyjaciel z innej galaktyki.",
+                item_dragon: "Smok", item_dragon_desc: "Strażnik matematycznego skarbu.",
+                item_unicorn: "Jednorożec", item_unicorn_desc: "Magiczne stworzenie.",
+                item_hero: "Superbohater", item_hero_desc: "Ratuj liczby przed chaosem!",
+                item_fairy: "Wróżka", item_fairy_desc: "Dodaje magii do liczenia.",
+                item_nebula: "Mgławica", item_nebula_desc: "Fioletowa otchłań kosmosu.",
+                item_blackhole: "Czarna Dziura", item_blackhole_desc: "Ciemny motyw dla odważnych.",
+                item_supernova: "Supernowa", item_supernova_desc: "Jasny, ciepły wybuch.",
+                item_neon: "Neon", item_neon_desc: "Świecące przyciski.",
+                item_gold: "Złoto", item_gold_desc: "Królewski styl.",
+                ach_first_step: "Pierwszy Krok", ach_first_step_desc: "Rozwiąż pierwsze zadanie.",
+                ach_speedster: "Szybki jak kometa", ach_speedster_desc: "10 poprawnych odpowiedzi w minutę.",
+                ach_flawless: "Bezbłędny Lot", ach_flawless_desc: "50 poprawnych odpowiedzi z rzędu.",
+                ach_night_owl: "Nocny Marek", ach_night_owl_desc: "Trening po godzinie 20:00.",
+                ach_math_master: "Mistrz Liczb", ach_math_master_desc: "Zdobądź 1000 XP.",
+                wallet_spendable_xp: "Do wydania w sklepie"
+            },
+            en: {
+                app_title: "Math Galaxy",
+                select_pilot: "Select Mission Pilot:",
+                new_astronaut: "New Astronaut",
+                choose_look: "Choose your look:",
+                your_name: "Your name",
+                cancel: "Cancel",
+                create: "Create",
+                welcome: "Hello",
+                rank: "Rank",
+                level: "Level",
+                xp: "XP",
+                streak: "Day Streak",
+                goal: "Goal",
+                daily_goal: "Daily Goal",
+                daily_goal_desc: "Earn XP to complete the day!",
+                achieved: "Achieved!",
+                missing_xp: "Missing",
+                change_profile: "Change",
+                shop: "Shop",
+                achievements: "Fame",
+                wallet: "Your Wallet",
+                buy_for: "Buy for",
+                equipped: "Equipped",
+                equip: "Equip",
+                mission_basic: "Select Basic Mission:",
+                mission_super: "Select Super Mission:",
+                mode_add: "Addition",
+                mode_sub: "Subtraction",
+                mode_mul: "Multiplication",
+                mode_div: "Division",
+                mode_unknown: "Black Hole Mystery",
+                mode_sequences: "Signal Decryption",
+                mode_order: "Launch Code",
+                desc_add: "Mission: Sum of parts",
+                desc_sub: "Mission: Count reduction",
+                desc_mul: "Mission: Rapid growth",
+                desc_div: "Mission: Equal share",
+                desc_unknown: "Find missing number",
+                desc_sequences: "Discover next number!",
+                desc_order: "Start engines! Order of ops.",
+                difficulty_easy: "Easy (Earth)",
+                difficulty_medium: "Medium (Mars)",
+                difficulty_hard: "Hard (Jupiter)",
+                desc_easy: "Numbers up to 30.",
+                desc_medium: "Two-digit numbers.",
+                desc_hard: "Three-digit numbers.",
+                check: "CHECK",
+                mission_abort: "Abort Mission",
+                great: "Great! +10 XP",
+                try_again: "Try again!",
+                mission_complete: "Mission Complete!",
+                earned_xp: "Earned XP",
+                correct_answers: "Correct",
+                back_to_base: "Back to Base",
+                leaderboard_title: "Daily Leaderboard",
+                leaderboard_desc: "Who trained hardest today?",
+                you: "(You)",
+                delete_confirm_title: "Delete Profile?",
+                delete_confirm_desc: "Are you sure you want to delete this astronaut? All stars and trophies will be lost!",
+                delete_yes: "Yes, delete",
+                delete_no: "No, keep",
+                new_badge: "New Badge!",
+                super: "Super!",
+                shop_title: "Cosmic Shop",
+                shop_desc: "Spend XP on rewards! Rank won't drop.",
+                cat_avatars: "New Characters",
+                cat_backgrounds: "Cosmic Backgrounds",
+                cat_skins: "Button Styles",
+                achievements_title: "Hall of Fame",
+                ach_earned: "Earned!",
+                hero_title: "Be a Hero!",
+                hero_desc: "Train your brain and conquer challenges!",
+                prizes_title: "Collect Rewards!",
+                prizes_desc: "Earn trophies and badges!",
+                shop_card_title: "Cosmic Shop!",
+                shop_card_desc: "Exchange points for new characters!",
+                start_prompt: "Ready for launch? Create profile and go! 🚀",
+                rank_cadet: "Cadet",
+                rank_pilot: "Pilot",
+                rank_astronaut: "Astronaut",
+                rank_captain: "Captain",
+                rank_commander: "Commander",
+                rank_admiral: "Galaxy Admiral",
+                finish_signal: "Complete signal:",
+                calc_code: "Calculate launch code:",
+                solve_equation: "Solve equation:",
+                item_alien: "Alien", item_alien_desc: "Friend from another galaxy.",
+                item_dragon: "Dragon", item_dragon_desc: "Guardian of math treasure.",
+                item_unicorn: "Unicorn", item_unicorn_desc: "Magical creature.",
+                item_hero: "Superhero", item_hero_desc: "Save numbers from chaos!",
+                item_fairy: "Fairy", item_fairy_desc: "Adds magic to counting.",
+                item_nebula: "Nebula", item_nebula_desc: "Purple abyss of space.",
+                item_blackhole: "Black Hole", item_blackhole_desc: "Dark theme for the brave.",
+                item_supernova: "Supernova", item_supernova_desc: "Bright, warm explosion.",
+                item_neon: "Neon", item_neon_desc: "Glowing buttons.",
+                item_gold: "Gold", item_gold_desc: "Royal style.",
+                ach_first_step: "First Step", ach_first_step_desc: "Solve your first problem.",
+                ach_speedster: "Speedster", ach_speedster_desc: "10 correct answers in a minute.",
+                ach_flawless: "Flawless Flight", ach_flawless_desc: "50 correct answers in a row.",
+                ach_night_owl: "Night Owl", ach_night_owl_desc: "Training after 8 PM.",
+                ach_math_master: "Math Master", ach_math_master_desc: "Earn 1000 XP.",
+                wallet_spendable_xp: "XP to spend in shop"
+            }
+        };
+
         // --- SOUND MANAGER ---
         const SoundManager = {
             ctx: null,
@@ -77,12 +289,12 @@
                 this.playTone(783.99, 'square', 0.2, now + 0.4); 
                 this.playTone(1046.50, 'square', 0.6, now + 0.6); 
             },
-            playAchievement: function() { // Fanfary dla odznaki
+            playAchievement: function() { 
                 const now = 0;
-                this.playTone(783.99, 'triangle', 0.15, now); // G5
+                this.playTone(783.99, 'triangle', 0.15, now); 
                 this.playTone(783.99, 'triangle', 0.15, now + 0.15); 
                 this.playTone(783.99, 'triangle', 0.15, now + 0.3); 
-                this.playTone(1046.50, 'triangle', 0.6, now + 0.45); // C6
+                this.playTone(1046.50, 'triangle', 0.6, now + 0.45); 
             },
             playBuy: function() { 
                 this.playTone(1200, 'sine', 0.1, 0, 0.1);
@@ -92,55 +304,54 @@
 
         // --- KONFIGURACJA DEXIE DB ---
         const db = new Dexie('MathGalaxyDB');
-        // Aktualizacja schematu bazy danych (v3 dodaje achievements i consecutiveCorrect)
         db.version(3).stores({
             users: '++id, name, xp, totalXp, streak, lastPlayed, dailyXp, dailyGoalReached, unlockedItems, activeBackground, activeSkin, achievements, consecutiveCorrect' 
         });
 
         // --- DANE ODZNAK ---
         const ACHIEVEMENTS = [
-            { id: 'first_step', name: 'Pierwszy Krok', icon: '👣', desc: 'Rozwiąż pierwsze zadanie.' },
-            { id: 'speedster', name: 'Szybki jak kometa', icon: '☄️', desc: '10 poprawnych odpowiedzi w minutę.' },
-            { id: 'flawless', name: 'Bezbłędny Lot', icon: '💎', desc: '50 poprawnych odpowiedzi z rzędu.' },
-            { id: 'night_owl', name: 'Nocny Marek', icon: '🦉', desc: 'Trening po godzinie 20:00.' },
-            { id: 'math_master', name: 'Mistrz Liczb', icon: '🧠', desc: 'Zdobądź 1000 XP.' }
+            { id: 'first_step', nameKey: 'ach_first_step', icon: '👣', descKey: 'ach_first_step_desc' },
+            { id: 'speedster', nameKey: 'ach_speedster', icon: '☄️', descKey: 'ach_speedster_desc' },
+            { id: 'flawless', nameKey: 'ach_flawless', icon: '💎', descKey: 'ach_flawless_desc' },
+            { id: 'night_owl', nameKey: 'ach_night_owl', icon: '🦉', descKey: 'ach_night_owl_desc' },
+            { id: 'math_master', nameKey: 'ach_math_master', icon: '🧠', descKey: 'ach_math_master_desc' }
         ];
 
         // --- DANE SKLEPU ---
         const SHOP_ITEMS = [
-            { id: 'av_alien', type: 'avatar', name: 'Kosmita', content: '👾', price: 300, desc: 'Przyjaciel z innej galaktyki.' },
-            { id: 'av_dragon', type: 'avatar', name: 'Smok', content: '🐲', price: 500, desc: 'Strażnik matematycznego skarbu.' },
-            { id: 'av_unicorn', type: 'avatar', name: 'Jednorożec', content: '🦄', price: 500, desc: 'Magiczne stworzenie.' },
-            { id: 'av_hero', type: 'avatar', name: 'Superbohater', content: '🦸', price: 400, desc: 'Ratuj liczby przed chaosem!' },
-            { id: 'av_fairy', type: 'avatar', name: 'Wróżka', content: '🧚', price: 300, desc: 'Dodaje magii do liczenia.' },
-            { id: 'bg_nebula', type: 'background', name: 'Mgławica', content: 'bg-theme-nebula', price: 800, desc: 'Fioletowa otchłań kosmosu.', icon: '🌌' },
-            { id: 'bg_blackhole', type: 'background', name: 'Czarna Dziura', content: 'bg-theme-blackhole', price: 1000, desc: 'Ciemny motyw dla odważnych.', icon: '⚫' },
-            { id: 'bg_supernova', type: 'background', name: 'Supernowa', content: 'bg-theme-supernova', price: 600, desc: 'Jasny, ciepły wybuch.', icon: '☀️' },
-            { id: 'skin_neon', type: 'skin', name: 'Neon', content: 'btn-theme-neon', price: 700, desc: 'Świecące przyciski.', icon: '🟢' },
-            { id: 'skin_gold', type: 'skin', name: 'Złoto', content: 'btn-theme-gold', price: 1200, desc: 'Królewski styl.', icon: '🟡' },
+            { id: 'av_alien', type: 'avatar', nameKey: 'item_alien', content: '👾', price: 300, descKey: 'item_alien_desc' },
+            { id: 'av_dragon', type: 'avatar', nameKey: 'item_dragon', content: '🐲', price: 500, descKey: 'item_dragon_desc' },
+            { id: 'av_unicorn', type: 'avatar', nameKey: 'item_unicorn', content: '🦄', price: 500, descKey: 'item_unicorn_desc' },
+            { id: 'av_hero', type: 'avatar', nameKey: 'item_hero', content: '🦸', price: 400, descKey: 'item_hero_desc' },
+            { id: 'av_fairy', type: 'avatar', nameKey: 'item_fairy', content: '🧚', price: 300, descKey: 'item_fairy_desc' },
+            { id: 'bg_nebula', type: 'background', nameKey: 'item_nebula', content: 'bg-theme-nebula', price: 800, descKey: 'item_nebula_desc', icon: '🌌' },
+            { id: 'bg_blackhole', type: 'background', nameKey: 'item_blackhole', content: 'bg-theme-blackhole', price: 1000, descKey: 'item_blackhole_desc', icon: '⚫' },
+            { id: 'bg_supernova', type: 'background', nameKey: 'item_supernova', content: 'bg-theme-supernova', price: 600, descKey: 'item_supernova_desc', icon: '☀️' },
+            { id: 'skin_neon', type: 'skin', nameKey: 'item_neon', content: 'btn-theme-neon', price: 700, descKey: 'item_neon_desc', icon: '🟢' },
+            { id: 'skin_gold', type: 'skin', nameKey: 'item_gold', content: 'btn-theme-gold', price: 1200, descKey: 'item_gold_desc', icon: '🟡' },
         ];
 
         const DAILY_XP_GOAL = 200; 
 
         const RANKS = [
-          { name: "Kadet", minXp: 0, icon: "👶" },
-          { name: "Pilot", minXp: 500, icon: "✈️" },
-          { name: "Astronauta", minXp: 1500, icon: "🧑‍🚀" },
-          { name: "Kapitan", minXp: 3000, icon: "🎖️" },
-          { name: "Komandor", minXp: 5000, icon: "🛸" },
-          { name: "Admirał Galaktyki", minXp: 10000, icon: "👑" },
+          { nameKey: "rank_cadet", minXp: 0, icon: "👶" },
+          { nameKey: "rank_pilot", minXp: 500, icon: "✈️" },
+          { nameKey: "rank_astronaut", minXp: 1500, icon: "🧑‍🚀" },
+          { nameKey: "rank_captain", minXp: 3000, icon: "🎖️" },
+          { nameKey: "rank_commander", minXp: 5000, icon: "🛸" },
+          { nameKey: "rank_admiral", minXp: 10000, icon: "👑" },
         ];
 
         const BASE_AVATARS = ["👨‍🚀", "👩‍🚀", "🤖", "👽", "🐱", "🚀", "⭐", "🪐"];
 
         const DIFFICULTY_LEVELS = {
-            easy: { name: "Łatwy (Ziemia)", color: "green", max: 30, description: "Liczby do 30." },
-            medium: { name: "Średni (Mars)", color: "yellow", max: 100, description: "Liczby dwucyfrowe." },
-            hard: { name: "Trudny (Jowisz)", color: "red", max: 1000, description: "Liczby trzycyfrowe." },
+            easy: { nameKey: "difficulty_easy", color: "green", max: 30, descKey: "desc_easy" },
+            medium: { nameKey: "difficulty_medium", color: "yellow", max: 100, descKey: "desc_medium" },
+            hard: { nameKey: "difficulty_hard", color: "red", max: 1000, descKey: "desc_hard" },
         };
 
         const getRank = (xp) => [...RANKS].reverse().find(r => xp >= r.minXp) || RANKS[0];
-        const getNextRank = (xp) => RANKS.find(r => r.minXp > xp) || { name: "Max Level", minXp: xp };
+        const getNextRank = (xp) => RANKS.find(r => r.minXp > xp) || { nameKey: "Max Level", minXp: xp };
 
         // --- KOMPONENTY UI ---
         const Icon = ({ name, size = 24, className = "" }) => {
@@ -197,42 +408,42 @@
         );
 
         // --- SEKCA MARKETINGOWA ---
-        const MarketingSection = () => (
+        const MarketingSection = ({ t }) => (
             <div className="w-full max-w-4xl mb-8 animate-bounce-in">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                    <Card className="bg-white/80 border-4 border-yellow-300 transform hover:-translate-y-2 transition-all duration-300">
                       <div className="text-center">
                          <div className="text-6xl mb-4">🦸‍♂️</div>
-                         <h3 className="text-xl font-black text-indigo-900 mb-2">Zostań Bohaterem!</h3>
-                         <p className="text-sm text-gray-600 font-medium">Ćwicz mózg, licz szybciej niż rakieta i pokonuj wyzwania!</p>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">{t('hero_title')}</h3>
+                         <p className="text-sm text-gray-600 font-medium">{t('hero_desc')}</p>
                       </div>
                    </Card>
                    
                    <Card className="bg-white/80 border-4 border-purple-300 transform hover:-translate-y-2 transition-all duration-300 delay-100">
                       <div className="text-center">
                          <div className="text-6xl mb-4">🏆</div>
-                         <h3 className="text-xl font-black text-indigo-900 mb-2">Zbieraj Nagrody!</h3>
-                         <p className="text-sm text-gray-600 font-medium">Zdobywaj puchary, odznaki i wbijaj kosmiczne rangi!</p>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">{t('prizes_title')}</h3>
+                         <p className="text-sm text-gray-600 font-medium">{t('prizes_desc')}</p>
                       </div>
                    </Card>
                    
                    <Card className="bg-white/80 border-4 border-green-300 transform hover:-translate-y-2 transition-all duration-300 delay-200">
                       <div className="text-center">
                          <div className="text-6xl mb-4">🛍️</div>
-                         <h3 className="text-xl font-black text-indigo-900 mb-2">Kosmiczny Sklep!</h3>
-                         <p className="text-sm text-gray-600 font-medium">Wymieniaj punkty na nowe postacie i tła. Twój styl, Twoja gra!</p>
+                         <h3 className="text-xl font-black text-indigo-900 mb-2">{t('shop_card_title')}</h3>
+                         <p className="text-sm text-gray-600 font-medium">{t('shop_card_desc')}</p>
                       </div>
                    </Card>
                 </div>
                 <div className="text-center mt-8 bg-indigo-100/50 p-4 rounded-3xl backdrop-blur-sm border-2 border-indigo-200">
-                    <p className="text-indigo-800 font-bold text-lg">Gotowy na start? Stwórz profil i ruszaj w drogę! 🚀</p>
+                    <p className="text-indigo-800 font-bold text-lg">{t('start_prompt')}</p>
                 </div>
             </div>
         );
 
         // --- KOMPONENTY ---
 
-        const DailyLeaderboard = ({ users, currentUserId }) => {
+        const DailyLeaderboard = ({ users, currentUserId, t }) => {
             if (users.length < 2) return null;
             const today = new Date().toDateString();
             const sortedUsers = users.map(u => ({
@@ -244,7 +455,7 @@
                 <Card className="mb-8 border-b-4 border-indigo-200 bg-gradient-to-br from-white to-indigo-50 w-full">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-2 bg-yellow-100 rounded-full text-yellow-600"><Icon name="Crown" size={24} /></div>
-                        <div><h3 className="text-lg font-bold text-indigo-900">Ranking Dnia</h3><p className="text-xs text-indigo-500">Kto dzisiaj trenował najciężej?</p></div>
+                        <div><h3 className="text-lg font-bold text-indigo-900">{t('leaderboard_title')}</h3><p className="text-xs text-indigo-500">{t('leaderboard_desc')}</p></div>
                     </div>
                     <div className="space-y-2">
                         {sortedUsers.map((user, index) => {
@@ -260,8 +471,8 @@
                                         <div className="font-bold text-gray-400 w-6 text-center">{rankIcon || index + 1}</div>
                                         <div className="text-2xl">{user.avatar}</div>
                                         <div className="flex flex-col">
-                                            <span className={`font-bold ${isCurrentUser ? 'text-indigo-700' : 'text-gray-700'}`}>{user.name} {isCurrentUser && "(Ty)"}</span>
-                                            <span className="text-[10px] text-gray-400 font-medium uppercase">{getRank(user.totalXp || user.xp).name}</span>
+                                            <span className={`font-bold ${isCurrentUser ? 'text-indigo-700' : 'text-gray-700'}`}>{user.name} {isCurrentUser && t('you')}</span>
+                                            <span className="text-[10px] text-gray-400 font-medium uppercase">{t(getRank(user.totalXp || user.xp).nameKey)}</span>
                                         </div>
                                     </div>
                                     <div className="font-bold text-indigo-600 bg-white/50 px-3 py-1 rounded-lg">{user.displayDailyXp} XP</div>
@@ -273,22 +484,22 @@
             );
         };
 
-        const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+        const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, t }) => {
             if (!isOpen) return null;
             return (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
                     <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl transform animate-bounce-in text-center">
                         <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500"><Icon name="Trash2" size={40} /></div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">Usunąć profil?</h3>
-                        <p className="text-gray-500 mb-8">Czy na pewno chcesz usunąć tego kosmonautę?</p>
-                        <div className="flex flex-col gap-3"><Button variant="danger" onClick={onConfirm}>Tak, usuń profil</Button><Button variant="secondary" onClick={onClose}>Nie, zachowaj</Button></div>
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">{t('delete_confirm_title')}</h3>
+                        <p className="text-gray-500 mb-8">{t('delete_confirm_desc')}</p>
+                        <div className="flex flex-col gap-3"><Button variant="danger" onClick={onConfirm}>{t('delete_yes')}</Button><Button variant="secondary" onClick={onClose}>{t('delete_no')}</Button></div>
                     </div>
                 </div>
             );
         };
 
         // --- MODAL ODBLOKOWANIA ODZNAKI ---
-        const AchievementUnlockedModal = ({ achievement, onClose }) => {
+        const AchievementUnlockedModal = ({ achievement, onClose, t }) => {
             if (!achievement) return null;
             return (
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-md animate-bounce-in">
@@ -297,22 +508,22 @@
                         <div className="absolute -top-10 -right-10 w-32 h-32 bg-yellow-200 rounded-full blur-2xl opacity-50"></div>
                         
                         <div className="text-6xl mb-4 animate-bounce">{achievement.icon}</div>
-                        <h2 className="text-2xl font-black text-indigo-900 mb-2 uppercase tracking-wide">Nowa Odznaka!</h2>
-                        <h3 className="text-xl font-bold text-yellow-600 mb-4">{achievement.name}</h3>
-                        <p className="text-gray-600 mb-8 text-sm font-medium">{achievement.desc}</p>
-                        <Button onClick={onClose} className="w-full">Super!</Button>
+                        <h2 className="text-2xl font-black text-indigo-900 mb-2 uppercase tracking-wide">{t('new_badge')}</h2>
+                        <h3 className="text-xl font-bold text-yellow-600 mb-4">{t(achievement.nameKey)}</h3>
+                        <p className="text-gray-600 mb-8 text-sm font-medium">{t(achievement.descKey)}</p>
+                        <Button onClick={onClose} className="w-full">{t('super')}</Button>
                     </div>
                 </div>
             );
         };
 
         // --- EKRAN OSIĄGNIĘĆ ---
-        const AchievementsScreen = ({ user, onReturn }) => {
+        const AchievementsScreen = ({ user, onReturn, t }) => {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4 flex flex-col items-center">
                     <div className="w-full max-w-3xl mb-6 flex items-center justify-between text-white mt-4">
-                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> Wróć</Button>
-                        <h2 className="text-2xl font-bold flex items-center gap-2"><Icon name="Medal" className="text-yellow-400" /> Galeria Chwały</h2>
+                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
+                        <h2 className="text-2xl font-bold flex items-center gap-2"><Icon name="Medal" className="text-yellow-400" /> {t('achievements_title')}</h2>
                         <div className="w-16"></div>
                     </div>
 
@@ -325,9 +536,9 @@
                                         {ach.icon}
                                     </div>
                                     <div>
-                                        <h3 className={`text-lg font-bold ${isUnlocked ? 'text-gray-800' : 'text-gray-300'}`}>{ach.name}</h3>
-                                        <p className={`text-xs ${isUnlocked ? 'text-gray-600' : 'text-gray-500'}`}>{ach.desc}</p>
-                                        {isUnlocked && <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full border border-green-200">Zdobyte!</span>}
+                                        <h3 className={`text-lg font-bold ${isUnlocked ? 'text-gray-800' : 'text-gray-300'}`}>{t(ach.nameKey)}</h3>
+                                        <p className={`text-xs ${isUnlocked ? 'text-gray-600' : 'text-gray-500'}`}>{t(ach.descKey)}</p>
+                                        {isUnlocked && <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full border border-green-200">{t('ach_earned')}</span>}
                                     </div>
                                 </div>
                             );
@@ -338,7 +549,7 @@
         };
 
         // --- EKRAN SKLEPU ---
-        const ShopScreen = ({ user, onBuy, onEquip, onReturn }) => {
+        const ShopScreen = ({ user, onBuy, onEquip, onReturn, t }) => {
             // Helper for text color based on background
             const isDark = user.activeBackground?.includes('nebula') || user.activeBackground?.includes('blackhole');
             const textColor = isDark ? 'text-white' : 'text-indigo-900';
@@ -348,28 +559,28 @@
             return (
                 <div className={`min-h-screen p-4 flex flex-col items-center ${user.activeBackground || 'bg-theme-default'}`}>
                     <div className="w-full max-w-4xl mb-6 flex items-center justify-between mt-4">
-                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> Wróć</Button>
+                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
                         <div className="flex items-center gap-4">
                              <div className="flex flex-col items-end">
-                                <span className={`text-xs font-bold uppercase ${subTextColor}`}>Twój Portfel</span>
+                                <span className={`text-xs font-bold uppercase ${subTextColor}`}>{t('wallet')}</span>
                                 <span className={`text-2xl font-black flex items-center gap-2 ${textColor}`}>{user.xp} <Icon name="Coins" className="text-yellow-500"/></span>
                              </div>
                         </div>
                     </div>
 
-                    <h2 className={`text-3xl font-extrabold mb-2 flex items-center gap-2 ${textColor}`}><Icon name="ShoppingBag" size={32} /> Kosmiczny Sklepik</h2>
-                    <p className={`mb-8 ${subTextColor}`}>Wydawaj XP na super nagrody! Nie martw się, Twoja ranga nie spadnie.</p>
+                    <h2 className={`text-3xl font-extrabold mb-2 flex items-center gap-2 ${textColor}`}><Icon name="ShoppingBag" size={32} /> {t('shop_title')}</h2>
+                    <p className={`mb-8 ${subTextColor}`}>{t('shop_desc')}</p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                        <div className="col-span-1 md:col-span-3"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Nowe Postacie</h3></div>
+                        <div className="col-span-1 md:col-span-3"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_avatars')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'avatar').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.avatar === item.content;
                             return (
-                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
+                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className="text-6xl mb-4">{item.content}</div>
-                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
-                                    <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
+                                    <h4 className="font-bold text-lg text-gray-800">{t(item.nameKey)}</h4>
+                                    <p className="text-sm text-gray-500 mb-4">{t(item.descKey)}</p>
                                     {isOwned ? (
                                         <Button 
                                             onClick={() => !isEquipped && onEquip(item)} 
@@ -377,7 +588,7 @@
                                             disabled={isEquipped}
                                             className="w-full text-sm"
                                         >
-                                            {isEquipped ? 'Używasz' : 'Wybierz'}
+                                            {isEquipped ? t('equipped') : t('equip')}
                                         </Button>
                                     ) : (
                                         <Button 
@@ -385,46 +596,46 @@
                                             disabled={user.xp < item.price}
                                             className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}
                                         >
-                                            Kup za {item.price} XP
+                                            {t('buy_for')} {item.price} XP
                                         </Button>
                                     )}
-                                </div>
+                                </Card>
                             );
                         })}
 
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Kosmiczne Tła</h3></div>
+                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_backgrounds')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'background').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeBackground === item.content;
                             return (
-                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
+                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className={`w-full h-24 rounded-xl mb-4 ${item.content} flex items-center justify-center text-4xl`}>{item.icon}</div>
-                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
-                                    <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
+                                    <h4 className="font-bold text-lg text-gray-800">{t(item.nameKey)}</h4>
+                                    <p className="text-sm text-gray-500 mb-4">{t(item.descKey)}</p>
                                     {isOwned ? (
-                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? 'Używasz' : 'Wybierz'}</Button>
+                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? t('equipped') : t('equip')}</Button>
                                     ) : (
-                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>Kup za {item.price} XP</Button>
+                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>{t('buy_for')} {item.price} XP</Button>
                                     )}
-                                </div>
+                                </Card>
                             );
                         })}
                         
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold pb-2 mb-4 ${sectionTitleColor}`}>Wygląd Przycisków</h3></div>
+                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_skins')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'skin').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeSkin === item.content;
                             return (
-                                <div key={item.id} className={`relative group bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex flex-col items-center text-center border-4 ${isEquipped ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
+                                <Card key={item.id} className={`flex flex-col items-center text-center border-2 ${isEquipped ? 'border-green-500 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                                     <div className="mb-4"><button className={`px-4 py-2 rounded-xl font-bold bg-indigo-600 text-white ${item.content}`}>Przycisk</button></div>
-                                    <h4 className="font-bold text-lg text-gray-800">{item.name}</h4>
-                                    <p className="text-sm text-gray-500 mb-4">{item.desc}</p>
+                                    <h4 className="font-bold text-lg text-gray-800">{t(item.nameKey)}</h4>
+                                    <p className="text-sm text-gray-500 mb-4">{t(item.descKey)}</p>
                                     {isOwned ? (
-                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? 'Używasz' : 'Wybierz'}</Button>
+                                        <Button onClick={() => !isEquipped && onEquip(item)} variant={isEquipped ? 'success' : 'secondary'} disabled={isEquipped} className="w-full text-sm">{isEquipped ? t('equipped') : t('equip')}</Button>
                                     ) : (
-                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>Kup za {item.price} XP</Button>
+                                        <Button onClick={() => onBuy(item)} disabled={user.xp < item.price} className={`w-full text-sm ${user.xp < item.price ? 'opacity-50' : ''}`}>{t('buy_for')} {item.price} XP</Button>
                                     )}
-                                </div>
+                                </Card>
                             );
                         })}
                     </div>
@@ -432,7 +643,7 @@
             );
         };
 
-        const ProfilesScreen = ({ users, currentUser, onLogin, onCreate, onDelete, onCancelCreate }) => {
+        const ProfilesScreen = ({ users, currentUser, onLogin, onCreate, onDelete, onCancelCreate, onToggleLang, lang, t }) => {
           const [isCreating, setIsCreating] = useState(false);
           const [newName, setNewName] = useState('');
           const [selectedAvatar, setSelectedAvatar] = useState(BASE_AVATARS[0]);
@@ -449,10 +660,10 @@
             return (
               <div className="flex flex-col items-center justify-center min-h-screen bg-indigo-50 p-4">
                 <Card className="w-full max-w-md text-center">
-                  <h2 className="text-3xl font-extrabold text-indigo-900 mb-8">Nowy Kosmonauta</h2>
+                  <h2 className="text-3xl font-extrabold text-indigo-900 mb-8">{t('new_astronaut')}</h2>
                   
                   <div className="mb-6">
-                    <p className="text-gray-600 mb-2">Wybierz swój wygląd:</p>
+                    <p className="text-gray-600 mb-2">{t('choose_look')}</p>
                     <div className="flex flex-wrap justify-center gap-2">
                       {BASE_AVATARS.map(av => (
                         <button key={av} onClick={() => { SoundManager.playClick(); setSelectedAvatar(av); }} className={`text-4xl p-3 rounded-xl border-2 transition-all ${selectedAvatar === av ? 'bg-indigo-100 border-indigo-500 scale-110' : 'border-transparent hover:bg-gray-100'}`}>
@@ -463,15 +674,15 @@
                   </div>
                   <input 
                     type="text" 
-                    placeholder="Twoje imię" 
+                    placeholder={t('your_name')} 
                     value={newName} 
                     onChange={(e) => setNewName(e.target.value)} 
                     onKeyDown={(e) => e.key === 'Enter' && handleCreateClick()}
                     className="w-full text-center text-2xl font-black text-indigo-800 p-4 border-4 border-indigo-200 rounded-3xl focus:border-indigo-500 focus:outline-none mb-8 placeholder-indigo-300 tracking-wide" 
                   />
                   <div className="flex gap-4 justify-center">
-                    <Button variant="secondary" onClick={() => setIsCreating(false)}>Anuluj</Button>
-                    <Button disabled={!newName.trim()} onClick={handleCreateClick}>Stwórz</Button>
+                    <Button variant="secondary" onClick={() => setIsCreating(false)}>{t('cancel')}</Button>
+                    <Button disabled={!newName.trim()} onClick={handleCreateClick}>{t('create')}</Button>
                   </div>
                 </Card>
               </div>
@@ -480,83 +691,123 @@
 
           return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-100 to-purple-100 p-4 relative">
+              <div className="absolute top-4 right-4 z-50">
+                  <button onClick={onToggleLang} className="text-3xl hover:scale-110 transition-transform" title="Zmień język / Change Language">
+                      {lang === 'pl' ? '🇬🇧' : '🇵🇱'}
+                  </button>
+              </div>
+
               {currentUser && (
                  <div className="absolute top-4 left-4">
-                    <Button variant="secondary" onClick={onCancelCreate} className="text-sm py-2 px-4"><Icon name="ArrowLeft" size={16} /> Wróć do gry</Button>
+                    <Button variant="secondary" onClick={onCancelCreate} className="text-sm py-2 px-4"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
                  </div>
               )}
               <div className="text-center mb-8 mt-8">
-                <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center text-[10rem]"><img src="math-galaxy-hero-image-small.png" /></div>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">Matematyczna Galaktyka</h1>
+                <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center text-[10rem]">🪐</div>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">{t('app_title')}</h1>
               </div>
               
               {/* SEKCJA MARKETINGOWA - widoczna tylko gdy nie ma użytkowników */}
               {users.length === 0 ? (
-                <MarketingSection />
+                <MarketingSection t={t} />
               ) : (
                 <>
-                    <div className="w-full max-w-2xl"><DailyLeaderboard users={users} currentUserId={currentUser?.id} /></div>
-                    <p className="text-indigo-600 text-lg font-medium mb-4">Wybierz pilota misji:</p>
+                    <div className="w-full max-w-2xl"><DailyLeaderboard users={users} currentUserId={currentUser?.id} t={t} /></div>
+                    <p className="text-indigo-600 text-lg font-medium mb-4">{t('select_pilot')}</p>
                 </>
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mb-8">
-                {/* Nie wyświetlamy komunikatu "Brak zapisanych profili", bo zastępuje go sekcja marketingowa */}
                 {users.map(user => (
                   <div key={user.id} className="relative group">
                     <button onClick={() => { SoundManager.playClick(); onLogin(user); }} className={`w-full bg-white p-6 rounded-3xl shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center gap-4 text-left border-4 ${currentUser?.id === user.id ? 'border-green-400 bg-green-50' : 'border-transparent hover:border-indigo-200'}`}>
                       <div className="text-5xl bg-indigo-50 p-4 rounded-2xl">{user.avatar}</div>
                       <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-gray-800">{user.name} {currentUser?.id === user.id && <span className="text-sm text-green-600 ml-2">(Ty)</span>}</h3>
-                        <div className="flex items-center gap-2"><Icon name="Trophy" size={14} className="text-yellow-500" /><p className="text-indigo-500 font-medium text-sm">{getRank(user.totalXp || user.xp).name}</p></div>
-                        <p className="text-xs text-gray-400 mt-1">Poziom: {Math.floor((user.totalXp || user.xp) / 100) + 1}</p>
+                        <h3 className="text-2xl font-bold text-gray-800">{user.name} {currentUser?.id === user.id && <span className="text-sm text-green-600 ml-2">{t('you')}</span>}</h3>
+                        <div className="flex items-center gap-2"><Icon name="Trophy" size={14} className="text-yellow-500" /><p className="text-indigo-500 font-medium text-sm">{t(getRank(user.totalXp || user.xp).nameKey)}</p></div>
+                        <p className="text-xs text-gray-400 mt-1">{t('level')}: {Math.floor((user.totalXp || user.xp) / 100) + 1}</p>
                       </div>
                     </button>
                     <button onClick={(e) => { e.stopPropagation(); onDelete(user.id); }} className="absolute top-4 right-4 p-2 bg-white/90 rounded-full shadow-sm text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100 z-20 cursor-pointer border border-gray-100" title="Usuń profil"><Icon name="Trash2" size={20} /></button>
                   </div>
                 ))}
                 <button onClick={() => { SoundManager.playClick(); setIsCreating(true); }} className="bg-indigo-50/80 p-6 rounded-3xl border-4 border-dashed border-indigo-300 hover:bg-indigo-100 hover:border-indigo-400 transition-all flex flex-col items-center justify-center gap-2 text-indigo-500 hover:text-indigo-700 min-h-[140px]">
-                  <Icon name="Plus" size={40} /><span className="font-bold">Dodaj Kosmonautę</span>
+                  <Icon name="Plus" size={40} /><span className="font-bold">{t('new_astronaut')}</span>
                 </button>
               </div>
             </div>
           );
         };
 
-        const DashboardScreen = ({ currentUser, users, onChangeProfile, onSelectMode, onShowRanks, onShowShop, onShowAchievements }) => {
+        const DashboardScreen = ({ currentUser, users, onChangeProfile, onSelectMode, onShowRanks, onShowShop, onShowAchievements, t }) => {
           const xpForRank = currentUser.totalXp || currentUser.xp;
           const rank = getRank(xpForRank);
           const nextRank = getNextRank(xpForRank);
           const progress = Math.min(100, ((xpForRank - rank.minXp) / (nextRank.minXp - rank.minXp)) * 100);
           const handleModeClick = (mode) => { if (typeof onSelectMode === 'function') onSelectMode(mode); };
 
+          // Ustalenie koloru tekstu w nagłówku na podstawie tła
+          const isDarkBackground = currentUser.activeBackground?.includes('nebula') || currentUser.activeBackground?.includes('blackhole');
+          const headerTextColor = isDarkBackground ? 'text-white' : 'text-white';
+          const headerSubTextColor = isDarkBackground ? 'text-gray-300' : 'text-indigo-100';
+
+
           return (
-            <div className={`min-h-screen pb-10 ${currentUser.activeBackground || 'bg-theme-default'}`}>
-              <div className="bg-indigo-600 p-6 pb-32 rounded-b-[3rem] text-white shadow-lg relative overflow-hidden">
+            <div className={`min-h-screen pb-10 bg-gray-50`}>
+              <div className={`${currentUser.activeBackground || 'bg-indigo-600'} p-6 pb-32 rounded-b-[3rem] ${headerTextColor} shadow-lg relative overflow-hidden`}>
                  <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                     <Icon name="Star" className="absolute top-10 left-10 w-12 h-12 text-yellow-300" /><Icon name="Star" className="absolute top-20 right-20 w-8 h-8 text-yellow-200" /><div className="absolute bottom-10 right-10 w-20 h-20 rounded-full bg-white/10 blur-2xl"></div>
                  </div>
                 <div className="max-w-4xl mx-auto flex justify-between items-start relative z-10">
                    <div className="flex items-center gap-4">
                       <div className="text-6xl bg-white/20 p-3 rounded-3xl backdrop-blur-sm shadow-inner">{currentUser.avatar}</div>
-                      <div><h1 className="text-3xl font-bold drop-shadow-md">Cześć, {currentUser.name}!</h1><div className="flex items-center gap-2 text-indigo-100 font-medium"><Icon name="Trophy" size={18} className="text-yellow-400" /><span>Ranga: {rank.name}</span></div></div>
+                      <div><h1 className="text-3xl font-bold drop-shadow-md">{t('welcome')}, {currentUser.name}!</h1><div className={`flex items-center gap-2 font-medium ${headerSubTextColor}`}><Icon name="Trophy" size={18} className="text-yellow-400" /><span>{t('rank')}: {t(rank.nameKey)}</span></div></div>
                    </div>
-                   <div className="flex gap-2">
-                       <button onClick={() => { SoundManager.playClick(); onShowShop(); }} className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-white/30"><Icon name="ShoppingBag" size={16} /> Sklep</button>
-                       <button onClick={() => { SoundManager.playClick(); onShowAchievements(); }} className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-white/30"><Icon name="Medal" size={16} /> Chwała</button>
-                       <button onClick={onChangeProfile} className="bg-indigo-700/50 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-bold border border-indigo-500"><Icon name="User" size={16} /> Zmień</button>
+                   
+                   {/* POPRAWIONA SEKCJA PRZYCISKÓW */}
+                   <div className="flex gap-2 sm:gap-4 items-center">
+                       {/* SKLEP: Ikona na małym ekranie, tekst na dużym */}
+                       <button onClick={() => { SoundManager.playClick(); onShowShop(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor}`}>
+                           <Icon name="ShoppingBag" size={16} /> <span className="hidden sm:inline">{t('shop')}</span>
+                       </button>
+                       {/* CHWAŁA/OSIĄGNIĘCIA: Ikona na małym ekranie, tekst na dużym */}
+                       <button onClick={() => { SoundManager.playClick(); onShowAchievements(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor}`}>
+                           <Icon name="Medal" size={16} /> <span className="hidden sm:inline">{t('achievements')}</span>
+                       </button>
+                       {/* ZMIEŃ: Ikona na małym ekranie, tekst na dużym */}
+                       <button onClick={onChangeProfile} className={`bg-indigo-700/50 hover:bg-indigo-700 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-indigo-500 ${headerTextColor}`}>
+                           <Icon name="User" size={16} /> <span className="hidden sm:inline">{t('change_profile')}</span>
+                       </button>
                    </div>
                 </div>
-                <div onClick={onShowRanks} className="max-w-4xl mx-auto mt-8 bg-indigo-900/40 rounded-full p-1 backdrop-blur-md border border-indigo-500/30 relative z-10 cursor-pointer hover:scale-[1.02] transition-transform group" title="Kliknij, aby zobaczyć mapę rang">
-                   <div className="flex justify-between text-xs font-bold uppercase tracking-wider px-3 mb-1 text-indigo-200"><span>XP (Ranga): {xpForRank}</span><span className="flex items-center gap-1">Cel: {nextRank.name} ({nextRank.minXp} XP) <Icon name="Award" size={12} /></span></div>
-                   <div className="w-full bg-indigo-900/50 rounded-full h-4 overflow-hidden"><div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(250,204,21,0.5)]" style={{ width: `${progress}%` }}></div></div>
+                
+                {/* POPRAWIONA SEKCJA XP/RANGA */}
+                <div onClick={onShowRanks} className="max-w-4xl mx-auto mt-8 bg-black/20 rounded-3xl p-4 backdrop-blur-md border border-white/10 relative z-10 cursor-pointer hover:scale-[1.01] transition-transform group shadow-lg" title="Kliknij, aby zobaczyć mapę rang">
+                   <div className={`flex justify-between text-xs font-bold uppercase tracking-wider mb-2 ${headerSubTextColor}`}>
+                       <span>{t('xp')} ({t('rank')}): {xpForRank}</span>
+                       <span className="flex items-center gap-1">{t('goal')}: {t(nextRank.nameKey)} ({nextRank.minXp} XP) <Icon name="Award" size={14} /></span>
+                   </div>
+                   <div className="w-full bg-black/30 rounded-full h-5 p-0.5 border border-white/10">
+                       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(250,204,21,0.5)] relative" style={{ width: `${Math.max(2, progress)}%` }}>
+                            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/30 rounded-full blur-[1px]"></div>
+                       </div>
+                   </div>
+                   <div className={`text-center mt-2 text-[10px] opacity-0 group-hover:opacity-70 transition-opacity uppercase tracking-widest ${headerSubTextColor}`}>
+                       Kliknij, aby zobaczyć mapę kariery
+                   </div>
                 </div>
               </div>
 
               <div className="max-w-4xl mx-auto px-4 -mt-24 relative z-10">
-                <Card className="mb-6 border-b-4 border-blue-400 bg-white shadow-lg">
+                <Card className="mb-6 border-b-4 border-blue-400 bg-white shadow-lg p-4 sm:p-6"> {/* Zmniejszony padding wewnętrzny */}
                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                     <div className="flex items-center gap-4"><div className={`p-3 rounded-full bg-green-100 text-green-600`}><Icon name="Target" size={32} /></div><div><h3 className="text-lg font-bold text-gray-800">Cel Dnia: {DAILY_XP_GOAL} XP</h3><p className="text-sm text-gray-500">Zdobądź XP, aby zaliczyć dzień treningu!</p></div></div>
+                     <div className="flex items-center gap-4">
+                        <div className={`p-3 rounded-full bg-green-100 text-green-600`}><Icon name="Target" size={32} /></div>
+                        <div>
+                            <h3 className="text-lg font-bold text-gray-800">{t('daily_goal')}: {DAILY_XP_GOAL} XP</h3>
+                            <p className="text-sm text-gray-500">{t('daily_goal_desc')}</p>
+                        </div>
+                    </div>
                      <div className="w-full sm:w-1/2">
                        <div className="flex justify-between text-sm font-bold mb-1"><span className="text-gray-600">{currentUser.dailyXp || 0} / {DAILY_XP_GOAL} XP</span></div>
                        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden"><div className={`h-full transition-all duration-1000 bg-green-500`} style={{ width: `${Math.min(100, ((currentUser.dailyXp || 0) / DAILY_XP_GOAL) * 100)}%` }}></div></div>
@@ -565,37 +816,38 @@
                 </Card>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <Card className="flex flex-col items-center justify-center text-center py-4 border-b-4 border-yellow-400"><Icon name="Zap" className={`mb-2 text-yellow-500 fill-yellow-500`} size={32} /><span className="text-3xl font-bold text-gray-800">{currentUser.streak}</span><span className="text-xs text-gray-500 uppercase font-bold">Dni z rzędu</span></Card>
-                  <Card className="flex flex-col items-center justify-center text-center py-4 border-b-4 border-purple-400"><Icon name="Award" className="text-purple-500 mb-2" size={32} /><span className="text-3xl font-bold text-gray-800">{Math.floor(xpForRank / 100) + 1}</span><span className="text-xs text-gray-500 uppercase font-bold">Poziom</span></Card>
+                  <Card className="flex flex-col items-center justify-center text-center py-4 border-b-4 border-yellow-400"><Icon name="Zap" className={`mb-2 text-yellow-500 fill-yellow-500`} size={32} /><span className="text-3xl font-bold text-gray-800">{currentUser.streak}</span><span className="text-xs text-gray-500 uppercase font-bold">{t('streak')}</span></Card>
+                  <Card className="flex flex-col items-center justify-center text-center py-4 border-b-4 border-purple-400"><Icon name="Award" className="text-purple-500 mb-2" size={32} /><span className="text-3xl font-bold text-gray-800">{Math.floor(xpForRank / 100) + 1}</span><span className="text-xs text-gray-500 uppercase font-bold">{t('level')}</span></Card>
                   {/* Nowa karta: Portfel */}
                   <Card className="flex flex-col items-center justify-center text-center py-4 border-b-4 border-green-400 col-span-2 md:col-span-2 bg-green-50 cursor-pointer hover:bg-green-100 transition-colors" onClick={() => { SoundManager.playClick(); onShowShop(); }}>
                     <Icon name="Coins" className="text-yellow-600 mb-2" size={32} />
                     <span className="text-3xl font-bold text-gray-800">{currentUser.xp} XP</span>
-                    <span className="text-xs text-gray-500 uppercase font-bold">Do wydania w sklepie</span>
+                    {/* Poprawione tłumaczenie */}
+                    <span className="text-xs text-gray-500 uppercase font-bold">{t('wallet_spendable_xp')}</span>
                   </Card>
                 </div>
 
-                <h2 className={`text-2xl font-bold mb-6 pl-2 border-l-4 border-indigo-500 ml-1 ${currentUser.activeBackground?.includes('blackhole') ? 'text-white' : 'text-gray-800'}`}>Wybierz misję podstawową:</h2>
+                <h2 className={`text-2xl font-bold mb-6 pl-2 border-l-4 border-indigo-500 ml-1 ${currentUser.activeBackground?.includes('blackhole') ? 'text-white' : 'text-gray-800'}`}>{t('mission_basic')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                  <button onClick={() => handleModeClick('add')} className={`bg-white group hover:bg-green-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-green-200 hover:border-green-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-green-100 text-green-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Plus" size={32} /></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">Dodawanie</h3></div></button>
-                  <button onClick={() => handleModeClick('sub')} className={`bg-white group hover:bg-red-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-red-200 hover:border-red-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-red-100 text-red-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-4xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-2">-</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">Odejmowanie</h3></div></button>
-                  <button onClick={() => handleModeClick('mul')} className={`bg-white group hover:bg-blue-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-blue-200 hover:border-blue-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-blue-100 text-blue-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8">×</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">Mnożenie</h3></div></button>
-                  <button onClick={() => handleModeClick('div')} className={`bg-white group hover:bg-orange-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-orange-200 hover:border-orange-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-orange-100 text-orange-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-1">:</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">Dzielenie</h3></div></button>
+                  <button onClick={() => handleModeClick('add')} className={`bg-white group hover:bg-green-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-green-200 hover:border-green-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-green-100 text-green-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Plus" size={32} /></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">{t('mode_add')}</h3><p className="text-gray-500 text-sm">{t('desc_add')}</p></div></button>
+                  <button onClick={() => handleModeClick('sub')} className={`bg-white group hover:bg-red-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-red-200 hover:border-red-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-red-100 text-red-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-4xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-2">-</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">{t('mode_sub')}</h3><p className="text-gray-500 text-sm">{t('desc_sub')}</p></div></button>
+                  <button onClick={() => handleModeClick('mul')} className={`bg-white group hover:bg-blue-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-blue-200 hover:border-blue-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-blue-100 text-blue-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8">×</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">{t('mode_mul')}</h3><p className="text-gray-500 text-sm">{t('desc_mul')}</p></div></button>
+                  <button onClick={() => handleModeClick('div')} className={`bg-white group hover:bg-orange-50 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-orange-200 hover:border-orange-400 transition-all flex items-center gap-6 ${currentUser.activeSkin}`}><div className="bg-orange-100 text-orange-600 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><span className="text-3xl font-bold leading-none flex items-center justify-center h-8 w-8 pb-1">:</span></div><div className="text-left"><h3 className="text-xl font-bold text-gray-800">{t('mode_div')}</h3><p className="text-gray-500 text-sm">{t('desc_div')}</p></div></button>
                 </div>
 
-                <h2 className={`text-2xl font-bold mb-6 pl-2 border-l-4 border-purple-500 ml-1 ${currentUser.activeBackground?.includes('blackhole') ? 'text-white' : 'text-gray-800'}`}>Wybierz super misję:</h2>
+                <h2 className={`text-2xl font-bold mb-6 pl-2 border-l-4 border-purple-500 ml-1 ${currentUser.activeBackground?.includes('blackhole') ? 'text-white' : 'text-gray-800'}`}>{t('mission_super')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                    <button onClick={() => handleModeClick('unknown')} className={`bg-slate-900 group hover:bg-purple-900 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-slate-950 hover:border-purple-950 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
                      <div className="bg-purple-500/20 text-purple-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="HelpCircle" size={32} /></div>
-                     <div className="text-left"><h3 className="text-xl font-bold">Tajemnica Czarnej Dziury</h3><p className="text-slate-400 text-sm">Znajdź brakującą liczbę w równaniu</p></div>
+                     <div className="text-left"><h3 className="text-xl font-bold">{t('mode_unknown')}</h3><p className="text-slate-400 text-sm">{t('desc_unknown')}</p></div>
                   </button>
                    <button onClick={() => handleModeClick('sequences')} className={`bg-indigo-900 group hover:bg-indigo-800 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-indigo-950 hover:border-indigo-900 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
                      <div className="bg-indigo-500/20 text-indigo-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Radio" size={32} /></div>
-                     <div className="text-left"><h3 className="text-xl font-bold">Szyfrowanie Sygnału</h3><p className="text-indigo-200 text-sm">Odkryj kolejną liczbę w ciągu!</p></div>
+                     <div className="text-left"><h3 className="text-xl font-bold">{t('mode_sequences')}</h3><p className="text-indigo-200 text-sm">{t('desc_sequences')}</p></div>
                   </button>
                    <button onClick={() => handleModeClick('order')} className={`col-span-1 sm:col-span-2 bg-gray-800 group hover:bg-gray-700 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-gray-900 hover:border-gray-600 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
                      <div className="bg-gray-600/30 text-gray-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Terminal" size={32} /></div>
-                     <div className="text-left"><h3 className="text-xl font-bold">Kod Startowy</h3><p className="text-gray-400 text-sm">Uruchom silniki! Pamiętaj o kolejności działań.</p></div>
+                     <div className="text-left"><h3 className="text-xl font-bold">{t('mode_order')}</h3><p className="text-gray-400 text-sm">{t('desc_order')}</p></div>
                   </button>
                 </div>
               </div>
@@ -603,28 +855,28 @@
           );
         };
 
-        const RanksScreen = ({ currentXp, onReturn }) => {
+        const RanksScreen = ({ currentXp, onReturn, t }) => {
             const currentRank = getRank(currentXp);
             return (
                 <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4 flex flex-col items-center">
                     <div className="w-full max-w-2xl mb-6 flex items-center justify-between text-white mt-4">
-                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> Wróć</Button>
+                        <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
                         <h2 className="text-2xl font-bold flex items-center gap-2"><Icon name="Trophy" className="text-yellow-400" /> Mapa Kariery</h2>
                         <div className="w-16"></div>
                     </div>
                     <div className="w-full max-w-lg space-y-4 pb-10">
                         {RANKS.map((rank) => {
                             const isUnlocked = currentXp >= rank.minXp;
-                            const isCurrent = currentRank.name === rank.name;
+                            const isCurrent = currentRank.nameKey === rank.nameKey;
                             return (
-                                <div key={rank.name} className={`relative flex items-center gap-4 p-4 rounded-2xl border-4 transition-all ${isCurrent ? 'bg-white border-yellow-400 scale-105 shadow-[0_0_20px_rgba(250,204,21,0.5)] z-10' : isUnlocked ? 'bg-indigo-800 border-indigo-600 text-indigo-100' : 'bg-gray-800 border-gray-700 text-gray-500 opacity-70'}`}>
+                                <div key={rank.nameKey} className={`relative flex items-center gap-4 p-4 rounded-2xl border-4 transition-all ${isCurrent ? 'bg-white border-yellow-400 scale-105 shadow-[0_0_20px_rgba(250,204,21,0.5)] z-10' : isUnlocked ? 'bg-indigo-800 border-indigo-600 text-indigo-100' : 'bg-gray-800 border-gray-700 text-gray-500 opacity-70'}`}>
                                     <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl border-2 ${isUnlocked ? 'bg-indigo-100 border-indigo-300' : 'bg-gray-700 border-gray-600'}`}>{rank.icon}</div>
                                     <div className="flex-1">
                                         <div className="flex justify-between items-center">
-                                            <h3 className={`text-xl font-bold ${isCurrent ? 'text-indigo-900' : ''}`}>{rank.name}</h3>
+                                            <h3 className={`text-xl font-bold ${isCurrent ? 'text-indigo-900' : ''}`}>{t(rank.nameKey)}</h3>
                                             {isUnlocked ? <Icon name="Unlock" size={20} className={isCurrent ? "text-green-500" : "text-indigo-400"} /> : <Icon name="Lock" size={20} />}
                                         </div>
-                                        <p className={`text-sm font-medium ${isCurrent ? 'text-indigo-600' : ''}`}>Wymagane XP: {rank.minXp}</p>
+                                        <p className={`text-sm font-medium ${isCurrent ? 'text-indigo-600' : ''}`}>{t('xp')}: {rank.minXp}</p>
                                     </div>
                                 </div>
                             );
@@ -634,22 +886,22 @@
             );
         };
 
-        const LevelSelectionScreen = ({ mode, onSelectLevel, onCancel }) => {
+        const LevelSelectionScreen = ({ mode, onSelectLevel, onCancel, t }) => {
             const modeInfo = {
-                add: { name: "Dodawanie", icon: <Icon name="Plus" size={32} /> },
-                sub: { name: "Odejmowanie", icon: <span className="text-4xl font-bold">-</span> },
-                mul: { name: "Mnożenie", icon: <span className="text-3xl font-bold">×</span> },
-                div: { name: "Dzielenie", icon: <span className="text-3xl font-bold">:</span> },
-                unknown: { name: "Tajemnica Czarnej Dziury", icon: <Icon name="HelpCircle" size={32} /> },
-                sequences: { name: "Szyfrowanie Sygnału", icon: <Icon name="Radio" size={32} /> },
-                order: { name: "Kod Startowy", icon: <Icon name="Terminal" size={32} /> },
+                add: { name: "mode_add", icon: <Icon name="Plus" size={32} /> },
+                sub: { name: "mode_sub", icon: <span className="text-4xl font-bold">-</span> },
+                mul: { name: "mode_mul", icon: <span className="text-3xl font-bold">×</span> },
+                div: { name: "mode_div", icon: <span className="text-3xl font-bold">:</span> },
+                unknown: { name: "mode_unknown", icon: <Icon name="HelpCircle" size={32} /> },
+                sequences: { name: "mode_sequences", icon: <Icon name="Radio" size={32} /> },
+                order: { name: "mode_order", icon: <Icon name="Terminal" size={32} /> },
             }[mode] || { name: "Misja", icon: null };
 
             return (
                 <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 flex flex-col items-center justify-center p-4">
                     <div className="w-full max-w-2xl text-center mb-8">
                         <h1 className="text-3xl font-bold text-indigo-800 mb-2">Wybór Trudności</h1>
-                        <p className="text-lg text-gray-600 flex items-center justify-center gap-2">{modeInfo.icon} Tryb: <span className="font-extrabold text-indigo-600">{modeInfo.name}</span></p>
+                        <p className="text-lg text-gray-600 flex items-center justify-center gap-2">{modeInfo.icon} Tryb: <span className="font-extrabold text-indigo-600">{t(modeInfo.name)}</span></p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
                         {Object.keys(DIFFICULTY_LEVELS).map(levelKey => {
@@ -657,8 +909,8 @@
                             const colorClass = {green: 'border-green-400 text-green-700 bg-green-50', yellow: 'border-yellow-400 text-yellow-700 bg-yellow-50', red: 'border-red-400 text-red-700 bg-red-50'}[level.color];
                             return (
                                 <button key={levelKey} onClick={() => onSelectLevel(mode, levelKey)} className={`w-full p-6 rounded-3xl shadow-xl border-b-8 transition-all transform hover:scale-[1.02] ${colorClass}`}>
-                                    <div className="text-3xl font-black mb-2">{level.name}</div>
-                                    <p className="text-sm text-gray-600 mb-4">{level.description}</p>
+                                    <div className="text-3xl font-black mb-2">{t(level.nameKey)}</div>
+                                    <p className="text-sm text-gray-600 mb-4">{t(level.descKey)}</p>
                                     <div className="font-bold text-lg">Zakres: do {level.max}</div>
                                 </button>
                             );
@@ -671,7 +923,7 @@
             );
         };
 
-        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName }) => {
+        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName, t }) => {
             const [sessionCorrectTimestamps, setSessionCorrectTimestamps] = useState([]);
 
             if (!question) return <div className="min-h-screen flex items-center justify-center bg-indigo-50 font-bold text-indigo-500">Ładowanie misji...</div>;
@@ -702,7 +954,7 @@
                     <div className="min-h-screen bg-indigo-50 flex flex-col">
                     <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                         <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">Przerwij misję</span>
+                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
                         </button>
                         <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
                         <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
@@ -711,8 +963,8 @@
 
                     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
                         <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">Poziom: {difficultyName}</div>
-                        <div className="text-gray-500 text-sm mb-4 font-medium">Dokończ sygnał:</div>
+                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
+                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('finish_signal')}</div>
                         <div className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap">
                             {question.sequence.map((num, i) => (
                                 <span key={i} className="bg-indigo-100 px-3 py-2 rounded-lg text-indigo-800">{num}</span>
@@ -723,10 +975,10 @@
 
                         <div className="h-8">
                             {feedback === 'correct' && (
-                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> Świetnie! +10 XP</div>
+                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>
                             )}
                             {feedback === 'wrong' && (
-                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> Spróbuj jeszcze raz!</div>
+                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>
                             )}
                         </div>
                         </Card>
@@ -737,7 +989,7 @@
                         ))}
                         <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                         </div>
                     </div>
                     </div>
@@ -750,7 +1002,7 @@
                     <div className="min-h-screen bg-indigo-50 flex flex-col">
                     <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                         <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">Przerwij misję</span>
+                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
                         </button>
                         <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
                         <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
@@ -759,8 +1011,8 @@
 
                     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
                         <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">Poziom: {difficultyName}</div>
-                        <div className="text-gray-500 text-sm mb-4 font-medium">Oblicz kod startowy:</div>
+                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
+                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('calc_code')}</div>
                         
                         <div className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap">
                             <span>{question.expression}</span>
@@ -770,10 +1022,10 @@
 
                         <div className="h-8">
                             {feedback === 'correct' && (
-                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> Świetnie! +10 XP</div>
+                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>
                             )}
                             {feedback === 'wrong' && (
-                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> Spróbuj jeszcze raz!</div>
+                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>
                             )}
                         </div>
                         </Card>
@@ -784,7 +1036,7 @@
                         ))}
                         <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                         </div>
                     </div>
                     </div>
@@ -801,7 +1053,7 @@
                 <div className="min-h-screen bg-indigo-50 flex flex-col">
                 <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                     <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                    <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">Przerwij misję</span>
+                    <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
                     </button>
                     <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
                     <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
@@ -810,7 +1062,10 @@
 
                 <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
                     <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                    <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">Poziom: {difficultyName}</div>
+                    <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
+                    {question.type !== 'sequence' && question.type !== 'order' && (
+                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('solve_equation')}</div>
+                    )}
                     <div className="text-6xl sm:text-7xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap">
                         {isMissingA ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.term1}</span>}
                         <span className="text-indigo-500">{question.operator}</span>
@@ -819,8 +1074,8 @@
                         {isMissingResult ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.result}</span>}
                     </div>
                     <div className="h-8">
-                        {feedback === 'correct' && <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> Świetnie! +10 XP</div>}
-                        {feedback === 'wrong' && <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> Spróbuj jeszcze raz!</div>}
+                        {feedback === 'correct' && <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>}
+                        {feedback === 'wrong' && <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>}
                     </div>
                     </Card>
                     
@@ -830,14 +1085,14 @@
                     ))}
                     <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
                     <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                    <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : 'SPRAWDŹ'}</Button>
+                    <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                     </div>
                 </div>
                 </div>
             );
         };
 
-        const SummaryScreen = ({ gameStats, dailyXp, isDailyGoalMet, onReturn }) => {
+        const SummaryScreen = ({ gameStats, dailyXp, isDailyGoalMet, onReturn, t }) => {
             return (
                 <div className="min-h-screen bg-indigo-900 flex items-center justify-center p-4">
                 <Card className="w-full max-w-md text-center relative overflow-hidden">
@@ -847,33 +1102,33 @@
                     <div className="inline-block p-5 bg-yellow-100 rounded-full text-yellow-600 mb-4 shadow-inner">
                         <Icon name="Trophy" size={56} className="animate-pulse" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800">Misja Zakończona!</h2>
+                    <h2 className="text-3xl font-bold text-gray-800">{t('mission_complete')}</h2>
                     </div>
 
                     <div className="space-y-4 mb-8">
                     <div className="bg-indigo-50 p-5 rounded-2xl flex justify-between items-center border border-indigo-100">
-                        <div className="flex items-center gap-3"><Icon name="Zap" className="text-yellow-500" size={24} /><span className="text-gray-700 font-bold">Zdobyte XP</span></div>
+                        <div className="flex items-center gap-3"><Icon name="Zap" className="text-yellow-500" size={24} /><span className="text-gray-700 font-bold">{t('earned_xp')}</span></div>
                         <span className="text-3xl font-black text-indigo-600">+{gameStats.xpGained}</span>
                     </div>
                     
                     <div className={`p-5 rounded-2xl border-2 ${isDailyGoalMet ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'}`}>
                         <div className="flex justify-between items-center mb-2">
-                            <span className="font-bold text-gray-700">Cel Dnia</span>
+                            <span className="font-bold text-gray-700">{t('daily_goal')}</span>
                             <span className="font-bold">{dailyXp} / {DAILY_XP_GOAL} XP</span>
                         </div>
                         <div className="w-full bg-white rounded-full h-3 overflow-hidden border border-gray-200">
                             <div className={`h-full ${isDailyGoalMet ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${Math.min(100, (dailyXp / DAILY_XP_GOAL) * 100)}%` }}></div>
                         </div>
-                        {isDailyGoalMet ? <p className="text-green-600 font-bold text-sm mt-2 flex items-center justify-center gap-1"><Icon name="Check" size={16}/> Cel osiągnięty! Streak +1</p> : <p className="text-blue-600 text-sm mt-2">Brakuje jeszcze {DAILY_XP_GOAL - dailyXp} XP</p>}
+                        {isDailyGoalMet ? <p className="text-green-600 font-bold text-sm mt-2 flex items-center justify-center gap-1"><Icon name="Check" size={16}/> {t('achieved')} Streak +1</p> : <p className="text-blue-600 text-sm mt-2">{t('missing_xp')} {DAILY_XP_GOAL - dailyXp} XP</p>}
                     </div>
 
                     <div className="bg-gray-50 p-5 rounded-2xl flex justify-between items-center border border-gray-200">
-                        <div className="flex items-center gap-3"><Icon name="Check" className="text-green-500" size={24} /><span className="text-gray-700 font-bold">Poprawne</span></div>
+                        <div className="flex items-center gap-3"><Icon name="Check" className="text-green-500" size={24} /><span className="text-gray-700 font-bold">{t('correct_answers')}</span></div>
                         <span className="text-3xl font-black text-green-600">{gameStats.correct} <span className="text-lg text-gray-400 font-normal">/ {gameStats.total}</span></span>
                     </div>
                     </div>
 
-                    <Button onClick={onReturn} className="w-full py-4 text-xl">Wróć do Bazy</Button>
+                    <Button onClick={onReturn} className="w-full py-4 text-xl">{t('back_to_base')}</Button>
                 </Card>
                 </div>
             );
@@ -901,6 +1156,9 @@
           const [gameStats, setGameStats] = useState({ correct: 0, total: 0, xpGained: 0 });
           const [userToDelete, setUserToDelete] = useState(null);
           const [justUnlockedAchievement, setJustUnlockedAchievement] = useState(null);
+          const [lang, setLang] = useState('pl');
+
+          const t = (key) => TRANSLATIONS[lang][key] || key;
 
           // Inicjalizacja danych z Dexie
           useEffect(() => {
@@ -1018,7 +1276,7 @@
               } catch (e) { console.error("Błąd wyposażania:", e); }
           };
 
-          const checkAchievements = async (user, sessionCorrectTimestamps) => {
+          const checkAchievements = async (user, sessionCorrectTimestamps) => { // DODANO ASYNC
               let newAchievements = [];
               let updatedUser = { ...user };
 
@@ -1041,8 +1299,9 @@
               // 3. Bezbłędny Lot (50 z rzędu)
               if (!user.achievements.includes('flawless') && user.consecutiveCorrect >= 50) {
                   newAchievements.push(ACHIEVEMENTS.find(a => a.id === 'flawless'));
-                  updatedUser.achievements.push('flawless');
-              }
+                      updatedUser.achievements.push('flawless');
+                  }
+              // Błąd w logice IF w poprzedniej wersji, usunięto zagnieżdżenie, aby uniknąć pomyłek.
 
               // 4. Nocny Marek (po 20:00)
               if (!user.achievements.includes('night_owl') && new Date().getHours() >= 20) {
@@ -1228,8 +1487,20 @@
             generateQuestion(mode, difficulty);
           };
           const handleGameInput = (val) => {
-            if (val === 'backspace') setUserAnswer(prev => prev.slice(0, -1));
-            else if (userAnswer.length < 4) setUserAnswer(prev => prev + val);
+            if (feedback === 'wrong') {
+                setFeedback(null);
+                if (val === 'backspace') {
+                    setUserAnswer('');
+                } else {
+                    setUserAnswer(val);
+                }
+            } else {
+                if (val === 'backspace') {
+                    setUserAnswer(prev => prev.slice(0, -1));
+                } else if (userAnswer.length < 4) {
+                    setUserAnswer(prev => prev + val);
+                }
+            }
           };
           const checkAnswer = (sessionCorrectTimestamps, setSessionCorrectTimestamps) => {
             const val = parseInt(userAnswer);
@@ -1237,32 +1508,25 @@
             const isCorrect = val === question.answer;
             const xpChange = isCorrect ? 10 : -5;
             
-            let updatedUser = { ...currentUser }; // Copy current user to update streak
+            let updatedUser = { ...currentUser }; 
             
             if (isCorrect) {
                 SoundManager.playSuccess();
-                // Update streak for achievements
                 updatedUser.consecutiveCorrect = (updatedUser.consecutiveCorrect || 0) + 1;
-                // Update session timestamps for speedster achievement
                 const now = Date.now();
-                // FIX for iterable undefined: Add safe check and default empty array
                 const currentTimestamps = Array.isArray(sessionCorrectTimestamps) ? sessionCorrectTimestamps : [];
-                const newTimestamps = [...currentTimestamps, now].filter(t => now - t <= 60000); // Keep last 60s
+                const newTimestamps = [...currentTimestamps, now].filter(t => now - t <= 60000); 
                 
                 if (setSessionCorrectTimestamps) {
                     setSessionCorrectTimestamps(newTimestamps);
                 }
                 
-                // Check for achievements immediately
                 checkAchievements(updatedUser, newTimestamps);
             } else {
                 SoundManager.playError();
-                updatedUser.consecutiveCorrect = 0; // Reset streak on error
+                updatedUser.consecutiveCorrect = 0; 
             }
 
-            // Update user in state and DB (for streak persistence)
-            // Note: we are doing optimistic update here for consecutiveCorrect to make it snappy
-            // Actual XP update happens on finishGame, but streak resets immediately
              try {
                db.users.update(currentUser.id, { consecutiveCorrect: updatedUser.consecutiveCorrect });
                setCurrentUser(prev => ({ ...prev, consecutiveCorrect: updatedUser.consecutiveCorrect }));
@@ -1274,24 +1538,27 @@
             if (isCorrect) setTimeout(() => generateQuestion(gameMode, gameDifficulty), 1000);
           };
           const finishGame = () => { updateUserProgress(gameStats.xpGained); setView('summary'); };
-          const currentDifficultyName = gameDifficulty ? DIFFICULTY_LEVELS[gameDifficulty].name : 'Nieznany';
+          
+          // FIX: Dodano zabezpieczenie sprawdzające czy gameDifficulty istnieje przed pobraniem nazwy
+          const currentDifficultyName = gameDifficulty ? t(DIFFICULTY_LEVELS[gameDifficulty].nameKey) : '';
 
           return (
             <div className="font-sans text-slate-800 select-none">
-              {view === 'profiles' && <ProfilesScreen users={users} currentUser={currentUser} onLogin={loginUser} onCreate={handleCreateUser} onDelete={handleDeleteUserClick} onCancelCreate={() => setView('dashboard')} />}
-              {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} onShowShop={() => setView('shop')} onShowAchievements={() => setView('achievements')} />}
-              {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.totalXp || currentUser.xp} onReturn={() => setView('dashboard')} />}
-              {view === 'shop' && currentUser && <ShopScreen user={currentUser} onBuy={handleBuyItem} onEquip={handleEquipItem} onReturn={() => setView('dashboard')} />}
-              {view === 'achievements' && currentUser && <AchievementsScreen user={currentUser} onReturn={() => setView('dashboard')} />}
-              {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} />}
-              {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} />}
-              {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} />}
-              <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} />
+              {view === 'profiles' && <ProfilesScreen users={users} currentUser={currentUser} onLogin={loginUser} onCreate={handleCreateUser} onDelete={handleDeleteUserClick} onCancelCreate={() => setView('dashboard')} onToggleLang={() => setLang(l => l === 'pl' ? 'en' : 'pl')} lang={lang} t={t} />}
+              {view === 'dashboard' && currentUser && <DashboardScreen currentUser={currentUser} onChangeProfile={() => setView('profiles')} onSelectMode={handleSelectMode} onShowRanks={() => setView('ranks')} users={users} onShowShop={() => setView('shop')} onShowAchievements={() => setView('achievements')} t={t} />}
+              {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.totalXp || currentUser.xp} onReturn={() => setView('dashboard')} t={t} />}
+              {view === 'shop' && currentUser && <ShopScreen user={currentUser} onBuy={handleBuyItem} onEquip={handleEquipItem} onReturn={() => setView('dashboard')} t={t} />}
+              {view === 'achievements' && currentUser && <AchievementsScreen user={currentUser} onReturn={() => setView('dashboard')} t={t} />}
+              {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} t={t} />}
+              {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} t={t} />}
+              {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} t={t} />}
+              <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} t={t} />
               
               {/* MODAL ODBLOKOWANIA ODZNAKI */}
               <AchievementUnlockedModal 
                 achievement={justUnlockedAchievement} 
                 onClose={() => setJustUnlockedAchievement(null)} 
+                t={t}
               />
             </div>
           );
