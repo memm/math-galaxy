@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-5">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matematyczna Galaktyka 🚀</title>
     <!-- Tailwind CSS dla stylizacji -->
@@ -36,6 +36,29 @@
         /* Style dla skórek przycisków (nadpisują domyślne) */
         .btn-theme-neon { border-color: #39ff14 !important; box-shadow: 0 0 10px #39ff14 !important; }
         .btn-theme-gold { border-color: #ffd700 !important; border-width: 4px !important; }
+        
+        /* Styl dla nowego obrazka na stronie głównej */
+        .hero-image-container {
+            width: 256px; /* Wymiary oryginalnego Jowisza */
+            height: 256px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /* Fioletowy blask */
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.6); 
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -148,7 +171,10 @@
                 ach_flawless: "Bezbłędny Lot", ach_flawless_desc: "50 poprawnych odpowiedzi z rzędu.",
                 ach_night_owl: "Nocny Marek", ach_night_owl_desc: "Trening po godzinie 20:00.",
                 ach_math_master: "Mistrz Liczb", ach_math_master_desc: "Zdobądź 1000 XP.",
-                wallet_spendable_xp: "Do wydania w sklepie"
+                wallet_spendable_xp: "Do wydania w sklepie",
+                difficulty_select_title: "Wybór Trudności",
+                mode: "Tryb",
+                range: "Zakres"
             },
             en: {
                 app_title: "Math Galaxy",
@@ -252,7 +278,10 @@
                 ach_flawless: "Flawless Flight", ach_flawless_desc: "50 correct answers in a row.",
                 ach_night_owl: "Night Owl", ach_night_owl_desc: "Training after 8 PM.",
                 ach_math_master: "Math Master", ach_math_master_desc: "Earn 1000 XP.",
-                wallet_spendable_xp: "XP to spend in shop"
+                wallet_spendable_xp: "XP to spend in shop",
+                difficulty_select_title: "Difficulty Selection",
+                mode: "Mode",
+                range: "Range"
             }
         };
 
@@ -521,7 +550,7 @@
         const AchievementsScreen = ({ user, onReturn, t }) => {
             return (
                 <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4 flex flex-col items-center">
-                    <div className="w-full max-w-3xl mb-6 flex items-center justify-between text-white mt-4">
+                    <div className="w-full max-w-2xl mb-6 flex items-center justify-between text-white mt-4">
                         <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
                         <h2 className="text-2xl font-bold flex items-center gap-2"><Icon name="Medal" className="text-yellow-400" /> {t('achievements_title')}</h2>
                         <div className="w-16"></div>
@@ -557,8 +586,10 @@
             const sectionTitleColor = isDark ? 'text-gray-100 border-gray-400' : 'text-gray-700 border-gray-100';
 
             return (
-                <div className={`min-h-screen p-4 flex flex-col items-center ${user.activeBackground || 'bg-theme-default'}`}>
-                    <div className="w-full max-w-4xl mb-6 flex items-center justify-between mt-4">
+                // Zastosowanie aktywnego tła użytkownika na całym ekranie
+                <div className={`min-h-screen p-4 flex flex-col items-center ${user.activeBackground || 'bg-gradient-to-b from-indigo-100 to-purple-100'}`}>
+                    {/* Wróć do bazy i portfel - max-w-4xl (dopasowanie do głównego layoutu) */}
+                    <div className="w-full max-w-4xl mb-6 flex items-center justify-between mt-4"> 
                         <Button variant="secondary" onClick={onReturn} className="px-4 py-2 text-sm"><Icon name="ArrowLeft" size={16} /> {t('back_to_base')}</Button>
                         <div className="flex items-center gap-4">
                              <div className="flex flex-col items-end">
@@ -568,11 +599,15 @@
                         </div>
                     </div>
 
-                    <h2 className={`text-3xl font-extrabold mb-2 flex items-center gap-2 ${textColor}`}><Icon name="ShoppingBag" size={32} /> {t('shop_title')}</h2>
-                    <p className={`mb-8 ${subTextColor}`}>{t('shop_desc')}</p>
+                    {/* Zmieniono szerokość kontenera na max-w-4xl */}
+                    <div className="w-full max-w-4xl text-center">
+                        <h2 className={`text-3xl font-extrabold mb-2 flex items-center justify-center gap-2 ${textColor}`}><Icon name="ShoppingBag" size={32} /> {t('shop_title')}</h2>
+                        <p className={`mb-8 ${subTextColor}`}>{t('shop_desc')}</p>
+                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-                        <div className="col-span-1 md:col-span-3"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_avatars')}</h3></div>
+                    {/* Główny kontener sklepu - max-w-4xl, siatka 3 kolumny dla większej przestrzeni */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_avatars')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'avatar').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.avatar === item.content;
@@ -603,7 +638,7 @@
                             );
                         })}
 
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_backgrounds')}</h3></div>
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_backgrounds')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'background').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeBackground === item.content;
@@ -621,7 +656,7 @@
                             );
                         })}
                         
-                        <div className="col-span-1 md:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_skins')}</h3></div>
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 mt-4"><h3 className={`text-xl font-bold border-b-2 pb-2 mb-4 ${sectionTitleColor}`}>{t('cat_skins')}</h3></div>
                         {SHOP_ITEMS.filter(i => i.type === 'skin').map(item => {
                             const isOwned = user.unlockedItems?.includes(item.id);
                             const isEquipped = user.activeSkin === item.content;
@@ -703,7 +738,15 @@
                  </div>
               )}
               <div className="text-center mb-8 mt-8">
-                <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center text-[10rem]"><img src="math-galaxy-hero-image-small.png"/></div>
+                <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center relative">
+                    {/* Wstawienie nowego obrazka z URL */}
+                    <img 
+                        src="https://memm.github.io/math-galaxy/math-galaxy-hero-image-small.png"
+                        alt="Ilustracja rakiety i planet dla Matematycznej Galaktyki"
+                        className="hero-image"
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/256x256/8B5CF6/ffffff?text=MATH+GALAXY'; }}
+                    />
+                </div>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-2 tracking-tight">{t('app_title')}</h1>
               </div>
               
@@ -758,26 +801,35 @@
                  <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                     <Icon name="Star" className="absolute top-10 left-10 w-12 h-12 text-yellow-300" /><Icon name="Star" className="absolute top-20 right-20 w-8 h-8 text-yellow-200" /><div className="absolute bottom-10 right-10 w-20 h-20 rounded-full bg-white/10 blur-2xl"></div>
                  </div>
-                <div className="max-w-4xl mx-auto flex justify-between items-start relative z-10">
-                   <div className="flex items-center gap-4">
-                      <div className="text-6xl bg-white/20 p-3 rounded-3xl backdrop-blur-sm shadow-inner">{currentUser.avatar}</div>
-                      <div><h1 className="text-3xl font-bold drop-shadow-md">{t('welcome')}, {currentUser.name}!</h1><div className={`flex items-center gap-2 font-medium ${headerSubTextColor}`}><Icon name="Trophy" size={18} className="text-yellow-400" /><span>{t('rank')}: {t(rank.nameKey)}</span></div></div>
-                   </div>
+                <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-start relative z-10">
                    
-                   {/* POPRAWIONA SEKCJA PRZYCISKÓW */}
-                   <div className="flex gap-2 sm:gap-4 items-center">
+                   {/* ROW 1: PRZYCISKI (Przeniesione na górę) */}
+                   {/* Użycie flex-nowrap i max-w-full, aby utrzymać przyciski w jednym rzędzie, z priorytetem na ikonę na małych ekranach */}
+                   <div className="flex gap-2 sm:gap-4 items-center w-full justify-end sm:order-2 mb-4 sm:mb-0 flex-nowrap max-w-full">
                        {/* SKLEP: Ikona na małym ekranie, tekst na dużym */}
-                       <button onClick={() => { SoundManager.playClick(); onShowShop(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor}`}>
+                       <button onClick={() => { SoundManager.playClick(); onShowShop(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor} whitespace-nowrap`}>
                            <Icon name="ShoppingBag" size={16} /> <span className="hidden sm:inline">{t('shop')}</span>
                        </button>
                        {/* CHWAŁA/OSIĄGNIĘCIA: Ikona na małym ekranie, tekst na dużym */}
-                       <button onClick={() => { SoundManager.playClick(); onShowAchievements(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor}`}>
+                       <button onClick={() => { SoundManager.playClick(); onShowAchievements(); }} className={`bg-white/20 hover:bg-white/30 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-white/30 ${headerTextColor} whitespace-nowrap`}>
                            <Icon name="Medal" size={16} /> <span className="hidden sm:inline">{t('achievements')}</span>
                        </button>
                        {/* ZMIEŃ: Ikona na małym ekranie, tekst na dużym */}
-                       <button onClick={onChangeProfile} className={`bg-indigo-700/50 hover:bg-indigo-700 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-indigo-500 ${headerTextColor}`}>
+                       <button onClick={onChangeProfile} className={`bg-indigo-700/50 hover:bg-indigo-700 px-3 py-2 sm:px-4 rounded-xl transition flex items-center justify-center gap-2 text-sm font-bold border border-indigo-500 ${headerTextColor} whitespace-nowrap`}>
                            <Icon name="User" size={16} /> <span className="hidden sm:inline">{t('change_profile')}</span>
                        </button>
+                   </div>
+
+                   {/* ROW 2: AWATAR I NAZWA - teraz są pod przyciskami na mobile i obok na desktop */}
+                   <div className="flex items-center gap-4 w-full sm:w-auto sm:order-1 mt-4 sm:mt-0">
+                      <div className="text-6xl bg-white/20 p-3 rounded-3xl backdrop-blur-sm shadow-inner">{currentUser.avatar}</div>
+                      <div>
+                          <h1 className="text-3xl font-bold drop-shadow-md whitespace-nowrap">{t('welcome')}, {currentUser.name}!</h1>
+                          <div className={`flex items-center gap-2 font-medium ${headerSubTextColor} whitespace-nowrap`}>
+                             <Icon name="Trophy" size={18} className="text-yellow-400" />
+                             <span>{t('rank')}: {t(rank.nameKey)}</span>
+                          </div>
+                      </div>
                    </div>
                 </div>
                 
@@ -886,7 +938,7 @@
             );
         };
 
-        const LevelSelectionScreen = ({ mode, onSelectLevel, onCancel, t }) => {
+        const LevelSelectionScreen = ({ mode, onSelectLevel, onCancel, t, user }) => {
             const modeInfo = {
                 add: { name: "mode_add", icon: <Icon name="Plus" size={32} /> },
                 sub: { name: "mode_sub", icon: <span className="text-4xl font-bold">-</span> },
@@ -897,11 +949,17 @@
                 order: { name: "mode_order", icon: <Icon name="Terminal" size={32} /> },
             }[mode] || { name: "Misja", icon: null };
 
+            // Ustalenie kolorów tekstu na podstawie tła użytkownika
+            const isDarkBackground = user?.activeBackground?.includes('nebula') || user?.activeBackground?.includes('blackhole');
+            const textColor = isDarkBackground ? 'text-white' : 'text-indigo-800';
+            const subTextColor = isDarkBackground ? 'text-gray-300' : 'text-gray-600';
+            
             return (
-                <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 flex flex-col items-center justify-center p-4">
+                // Zmieniono tło na dynamiczne, które jest domyślne dla strony profilu/sklepu
+                <div className={`min-h-screen ${user?.activeBackground || 'bg-gradient-to-b from-indigo-100 to-purple-100'} flex flex-col items-center justify-center p-4`}>
                     <div className="w-full max-w-2xl text-center mb-8">
-                        <h1 className="text-3xl font-bold text-indigo-800 mb-2">Wybór Trudności</h1>
-                        <p className="text-lg text-gray-600 flex items-center justify-center gap-2">{modeInfo.icon} Tryb: <span className="font-extrabold text-indigo-600">{t(modeInfo.name)}</span></p>
+                        <h1 className={`text-3xl font-bold mb-2 ${textColor}`}>{t('difficulty_select_title')}</h1>
+                        <p className={`text-lg flex items-center justify-center gap-2 ${subTextColor}`}>{modeInfo.icon} {t('mode')}: <span className="font-extrabold text-indigo-600">{t(modeInfo.name)}</span></p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
                         {Object.keys(DIFFICULTY_LEVELS).map(levelKey => {
@@ -911,7 +969,7 @@
                                 <button key={levelKey} onClick={() => onSelectLevel(mode, levelKey)} className={`w-full p-6 rounded-3xl shadow-xl border-b-8 transition-all transform hover:scale-[1.02] ${colorClass}`}>
                                     <div className="text-3xl font-black mb-2">{t(level.nameKey)}</div>
                                     <p className="text-sm text-gray-600 mb-4">{t(level.descKey)}</p>
-                                    <div className="font-bold text-lg">Zakres: do {level.max}</div>
+                                    <div className="font-bold text-lg">{t('range')}: do {level.max}</div>
                                 </button>
                             );
                         })}
@@ -923,7 +981,7 @@
             );
         };
 
-        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName, t }) => {
+        const GameScreen = ({ question, userAnswer, feedback, gameStats, onAnswerChange, onCheckAnswer, onFinishGame, difficultyName, t, user }) => {
             const [sessionCorrectTimestamps, setSessionCorrectTimestamps] = useState([]);
 
             if (!question) return <div className="min-h-screen flex items-center justify-center bg-indigo-50 font-bold text-indigo-500">Ładowanie misji...</div>;
@@ -948,10 +1006,18 @@
                 onCheckAnswer(sessionCorrectTimestamps, setSessionCorrectTimestamps);
             }
 
+            // Ustalenie koloru tła i tekstu dla GameScreen
+            const backgroundClass = user?.activeBackground || 'bg-indigo-50'; // Użyj aktywnego tła dla całej strony
+            // Zmieniono mainTextColor na text-black, aby zapewnić kontrast na białej karcie
+            const mainTextColor = 'text-black'; 
+            const subTextColor = 'text-gray-500';
+            const cardBgClass = 'bg-white'; // Karta RÓWNANIA jest ZAWSZE biała (dla kontrastu)
+            const cardBorderColor = 'border-indigo-200'; // Używamy domyślnego koloru dla ramki, chyba że jest feedback
+
             if (question.type === 'sequence') {
                 const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
                 return (
-                    <div className="min-h-screen bg-indigo-50 flex flex-col">
+                    <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
                     <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                         <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
                         <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
@@ -962,10 +1028,10 @@
                     </div>
 
                     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
-                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
-                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('finish_signal')}</div>
-                        <div className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap">
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('finish_signal')}</div>
+                        <div className={`text-4xl sm:text-5xl font-extrabold mb-8 flex justify-center items-center gap-2 flex-wrap ${mainTextColor}`}>
                             {question.sequence.map((num, i) => (
                                 <span key={i} className="bg-indigo-100 px-3 py-2 rounded-lg text-indigo-800">{num}</span>
                             ))}
@@ -987,7 +1053,7 @@
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                             <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
                         ))}
-                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
+                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
                         <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                         </div>
@@ -999,7 +1065,7 @@
             if (question.type === 'order') {
                 const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
                 return (
-                    <div className="min-h-screen bg-indigo-50 flex flex-col">
+                    <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
                     <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                         <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
                         <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
@@ -1010,11 +1076,11 @@
                     </div>
 
                     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
-                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
-                        <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
-                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('calc_code')}</div>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('calc_code')}</div>
                         
-                        <div className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap">
+                        <div className={`text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap`}>
                             <span>{question.expression}</span>
                             <span>=</span>
                             <span className={activeInputStyle}>{userAnswer || '?'}</span>
@@ -1034,7 +1100,7 @@
                         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                             <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
                         ))}
-                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
+                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
                         <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
                         <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                         </div>
@@ -1050,7 +1116,7 @@
             const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
 
             return (
-                <div className="min-h-screen bg-indigo-50 flex flex-col">
+                <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
                 <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                     <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
                     <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
@@ -1061,12 +1127,13 @@
                 </div>
 
                 <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
-                    <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : 'border-indigo-200'}`}>
+                    <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
                     <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
                     {question.type !== 'sequence' && question.type !== 'order' && (
-                        <div className="text-gray-500 text-sm mb-4 font-medium">{t('solve_equation')}</div>
+                        <div className={`text-sm mb-4 font-medium ${subTextColor}`}>{t('solve_equation')}</div>
                     )}
-                    <div className="text-6xl sm:text-7xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap">
+                    {/* Wprowadzenie klasy text-black na liczbach równania */}
+                    <div className={`text-6xl sm:text-7xl font-extrabold mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap text-black`}>
                         {isMissingA ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.term1}</span>}
                         <span className="text-indigo-500">{question.operator}</span>
                         {isMissingB ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.term2}</span>}
@@ -1083,7 +1150,7 @@
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                         <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
                     ))}
-                    <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="RotateCcw" size={24} /></button>
+                    <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
                     <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
                     <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                     </div>
@@ -1092,9 +1159,12 @@
             );
         };
 
-        const SummaryScreen = ({ gameStats, dailyXp, isDailyGoalMet, onReturn, t }) => {
+        const SummaryScreen = ({ gameStats, dailyXp, isDailyGoalMet, onReturn, t, user }) => {
+            // Użyj aktywnego tła dla całego ekranu
+            const backgroundClass = user?.activeBackground || 'bg-indigo-900'; 
+            
             return (
-                <div className="min-h-screen bg-indigo-900 flex items-center justify-center p-4">
+                <div className={`min-h-screen ${backgroundClass} flex items-center justify-center p-4`}>
                 <Card className="w-full max-w-md text-center relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500"></div>
                     
@@ -1185,7 +1255,7 @@
                 dailyXp: 0, 
                 dailyGoalReached: false, 
                 history: [], 
-                unlockedItems: [], 
+                unlockedItems: [], // Teraz PUSTA LISTA!
                 activeBackground: '', 
                 activeSkin: '', 
                 achievements: [], 
@@ -1549,8 +1619,8 @@
               {view === 'ranks' && currentUser && <RanksScreen currentXp={currentUser.totalXp || currentUser.xp} onReturn={() => setView('dashboard')} t={t} />}
               {view === 'shop' && currentUser && <ShopScreen user={currentUser} onBuy={handleBuyItem} onEquip={handleEquipItem} onReturn={() => setView('dashboard')} t={t} />}
               {view === 'achievements' && currentUser && <AchievementsScreen user={currentUser} onReturn={() => setView('dashboard')} t={t} />}
-              {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} t={t} />}
-              {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} t={t} />}
+              {view === 'selectLevel' && gameMode && <LevelSelectionScreen mode={gameMode} onSelectLevel={startGame} onCancel={() => setView('dashboard')} t={t} user={currentUser} />}
+              {view === 'game' && <GameScreen question={question} userAnswer={userAnswer} feedback={feedback} gameStats={gameStats} onAnswerChange={handleGameInput} onCheckAnswer={checkAnswer} onFinishGame={finishGame} difficultyName={currentDifficultyName} t={t} user={currentUser} />}
               {view === 'summary' && <SummaryScreen gameStats={gameStats} dailyXp={currentUser?.dailyXp || 0} isDailyGoalMet={currentUser?.dailyGoalReached} onReturn={() => setView('dashboard')} currentUser={currentUser} t={t} />}
               <DeleteConfirmationModal isOpen={!!userToDelete} onClose={() => setUserToDelete(null)} onConfirm={confirmDeleteUser} t={t} />
               
