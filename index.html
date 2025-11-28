@@ -92,6 +92,11 @@
                 mode_sequences: "Szyfrowanie Sygnału",
                 mode_order: "Kod Startowy",
                 mode_weight: "Waga Gwiazd",
+                mode_roman: "Antyczny Szyfr",
+                mode_rounding: "Tarcza Meteorytów",
+                mode_fraction: "Ogniwa Energii",
+                mode_fraction_panel: "Skalibruj Panele",
+                mode_fraction_chamber: "Podziel Komnatę",
                 desc_add: "Misja: Suma składników",
                 desc_sub: "Misja: Redukcja liczebności",
                 desc_mul: "Misja: Szybki wzrost",
@@ -100,12 +105,17 @@
                 desc_sequences: "Odkryj kolejną liczbę!",
                 desc_order: "Uruchom silniki! Kolejność działań.",
                 desc_weight: "Porównaj ciężar równań!",
-                difficulty_easy: "Łatwy (Ziemia)",
-                difficulty_medium: "Średni (Mars)",
-                difficulty_hard: "Trudny (Jowisz)",
-                desc_easy: "Liczby do 30.",
-                desc_medium: "Liczby dwucyfrowe.",
-                desc_hard: "Liczby trzycyfrowe.",
+                desc_roman: "Odczytaj rzymskie liczby.",
+                desc_rounding: "Zaokrąglij, by odbić meteor!",
+                desc_fraction: "Oblicz procenty i ułamki.",
+                desc_fraction_panel: "Dodawaj i odejmuj ułamki.",
+                desc_fraction_chamber: "Ułamek z liczby całkowitej.",
+                difficulty_easy: "Ziemia",
+                difficulty_medium: "Mars",
+                difficulty_hard: "Jowisz",
+                desc_easy: "Liczby do 30. Na start!",
+                desc_medium: "Liczby do 100. Trening umysłu.",
+                desc_hard: "Liczby do 1000. Wyzwanie dla mistrzów.",
                 check: "SPRAWDŹ",
                 mission_abort: "Przerwij misję",
                 great: "Świetnie! +10 XP",
@@ -147,6 +157,12 @@
                 calc_code: "Oblicz kod startowy:",
                 solve_equation: "Rozwiąż równanie:",
                 compare_instruction: "Co jest większe?",
+                translate_roman: "Przetłumacz na liczbę:",
+                round_instruction: "Zaokrąglij liczbę:",
+                calc_fraction: "Oblicz wartość:",
+                calc_numerator: "Oblicz licznik:",
+                to_nearest_10: "do najbliższej 10",
+                to_nearest_100: "do najbliższej 100",
                 item_alien: "Kosmita", item_alien_desc: "Przyjaciel z innej galaktyki.",
                 item_dragon: "Smok", item_dragon_desc: "Strażnik matematycznego skarbu.",
                 item_unicorn: "Jednorożec", item_unicorn_desc: "Magiczne stworzenie.",
@@ -163,8 +179,8 @@
                 ach_night_owl: "Nocny Marek", ach_night_owl_desc: "Trening po godzinie 20:00.",
                 ach_math_master: "Mistrz Liczb", ach_math_master_desc: "Zdobądź 1000 XP.",
                 wallet_spendable_xp: "Do wydania w sklepie",
-                difficulty_select_title: "Wybór Trudności",
-                mode: "Tryb",
+                difficulty_select_title: "Wybierz Trudność",
+                mode: "Misja",
                 range: "Zakres"
             },
             en: {
@@ -202,6 +218,11 @@
                 mode_sequences: "Signal Decryption",
                 mode_order: "Launch Code",
                 mode_weight: "Star Weigh-In",
+                mode_roman: "Ancient Cipher",
+                mode_rounding: "Meteor Shield",
+                mode_fraction: "Energy Cells",
+                mode_fraction_panel: "Calibrate Panels",
+                mode_fraction_chamber: "Divide Chamber",
                 desc_add: "Mission: Sum of parts",
                 desc_sub: "Mission: Count reduction",
                 desc_mul: "Mission: Rapid growth",
@@ -210,12 +231,17 @@
                 desc_sequences: "Discover next number!",
                 desc_order: "Start engines! Order of ops.",
                 desc_weight: "Compare equation weights!",
-                difficulty_easy: "Easy (Earth)",
-                difficulty_medium: "Medium (Mars)",
-                difficulty_hard: "Hard (Jupiter)",
-                desc_easy: "Numbers up to 30.",
-                desc_medium: "Two-digit numbers.",
-                desc_hard: "Three-digit numbers.",
+                desc_roman: "Read the Roman numerals.",
+                desc_rounding: "Round to deflect meteor!",
+                desc_fraction: "Calculate percents & parts.",
+                desc_fraction_panel: "Add and subtract fractions.",
+                desc_fraction_chamber: "Fraction of a whole number.",
+                difficulty_easy: "Earth",
+                difficulty_medium: "Mars",
+                difficulty_hard: "Jupiter",
+                desc_easy: "Numbers up to 30. Start here!",
+                desc_medium: "Numbers up to 100. Brain training.",
+                desc_hard: "Numbers up to 1000. Master challenge.",
                 check: "CHECK",
                 mission_abort: "Abort Mission",
                 great: "Great! +10 XP",
@@ -257,6 +283,12 @@
                 calc_code: "Calculate launch code:",
                 solve_equation: "Solve equation:",
                 compare_instruction: "Which is greater?",
+                translate_roman: "Translate to number:",
+                round_instruction: "Round the number:",
+                calc_fraction: "Calculate value:",
+                calc_numerator: "Calculate numerator:",
+                to_nearest_10: "to nearest 10",
+                to_nearest_100: "to nearest 100",
                 item_alien: "Alien", item_alien_desc: "Friend from another galaxy.",
                 item_dragon: "Dragon", item_dragon_desc: "Guardian of math treasure.",
                 item_unicorn: "Unicorn", item_unicorn_desc: "Magical creature.",
@@ -274,7 +306,7 @@
                 ach_math_master: "Math Master", ach_math_master_desc: "Earn 1000 XP.",
                 wallet_spendable_xp: "XP to spend in shop",
                 difficulty_select_title: "Difficulty Selection",
-                mode: "Mode",
+                mode: "Mission",
                 range: "Range"
             }
         };
@@ -400,7 +432,16 @@
                 ShoppingBag: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
                 Coins: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>,
                 Medal: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/></svg>,
-                Scale: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+                Scale: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>,
+                Shield: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+                Battery: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg>,
+                BookOpen: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+                Sun: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>,
+                Grid: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>,
+                // IKONY PLANET
+                Earth: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="#00B0FF" stroke="#00B0FF" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path fill="#00E676" stroke="#00E676" d="M12 2a10 10 0 1 0 10 10a10 10 0 0 0-10-10zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8z"/><path fill="#009688" stroke="#009688" d="M12 18a6 6 0 0 0 6-6a6 6 0 0 0-6-6v12z"/></svg>,
+                Mars: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="#FF5722" stroke="#D84315" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" fill="#FF5722"/><path d="M16 3.13a10 10 0 0 1 0 17.74" stroke="#D84315"/><path d="M8 3.13a10 10 0 0 0 0 17.74" stroke="#D84315"/><path d="M10 18c-3 0-5 2-5 2m14 0s-2-2-5-2" stroke="#D84315"/></svg>,
+                Jupiter: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="#FFAB00" stroke="#FF6F00" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" fill="#FFAB00"/><path d="M16 12h-8m-2-4h12m-12 8h12" stroke="#FF6F00"/></svg>,
             };
             return <span className={className}>{icons[name] || '•'}</span>;
         };
@@ -883,7 +924,7 @@
                 </div>
 
                 <h2 className={`text-2xl font-bold mb-6 pl-2 border-l-4 border-purple-500 ml-1 ${currentUser.activeBackground?.includes('blackhole') ? 'text-white' : 'text-gray-800'}`}>{t('mission_super')}</h2>
-                {/* NOWY UKŁAD SIATKI NA 2 KOLUMNY */}
+                {/* NOWY UKŁAD SIATKI NA 2 KOLUMNY Z NOWYMI MISJAMI */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                    <button onClick={() => handleModeClick('unknown')} className={`bg-slate-900 group hover:bg-purple-900 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-slate-950 hover:border-purple-950 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
                      <div className="bg-purple-500/20 text-purple-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="HelpCircle" size={32} /></div>
@@ -893,17 +934,39 @@
                      <div className="bg-indigo-500/20 text-indigo-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Radio" size={32} /></div>
                      <div className="text-left"><h3 className="text-xl font-bold">{t('mode_sequences')}</h3><p className="text-indigo-200 text-sm">{t('desc_sequences')}</p></div>
                   </button>
-                   {/* DWA PRZYCISKI W JEDNYM RZĘDZIE NA WIDOKU SM - UŻYCIE GRID */}
-                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:col-span-2">
-                       <button onClick={() => handleModeClick('order')} className={`bg-gray-800 group hover:bg-gray-700 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-gray-900 hover:border-gray-600 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
-                         <div className="bg-gray-600/30 text-gray-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Terminal" size={32} /></div>
-                         <div className="text-left"><h3 className="text-xl font-bold">{t('mode_order')}</h3><p className="text-gray-400 text-sm">{t('desc_order')}</p></div>
-                      </button>
-                       <button onClick={() => handleModeClick('weight')} className={`bg-yellow-700 group hover:bg-yellow-600 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-yellow-800 hover:border-yellow-500 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
-                         <div className="bg-yellow-500/30 text-yellow-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Scale" size={32} /></div>
-                         <div className="text-left"><h3 className="text-xl font-bold">{t('mode_weight')}</h3><p className="text-yellow-100 text-sm">{t('desc_weight')}</p></div>
-                      </button>
-                   </div>
+                   <button onClick={() => handleModeClick('order')} className={`bg-gray-800 group hover:bg-gray-700 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-gray-900 hover:border-gray-600 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-gray-600/30 text-gray-300 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Terminal" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_order')}</h3><p className="text-gray-400 text-sm">{t('desc_order')}</p></div>
+                   </button>
+                   <button onClick={() => handleModeClick('weight')} className={`bg-yellow-700 group hover:bg-yellow-600 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-yellow-800 hover:border-yellow-500 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-yellow-500/30 text-yellow-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Scale" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_weight')}</h3><p className="text-yellow-100 text-sm">{t('desc_weight')}</p></div>
+                   </button>
+                   
+                   {/* NOWE MISJE - RZYMSKIE, ZAOKRĄGLANIE, UŁAMKI */}
+                   <button onClick={() => handleModeClick('roman')} className={`bg-amber-900 group hover:bg-amber-800 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-amber-950 hover:border-amber-900 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-amber-600/30 text-amber-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="BookOpen" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_roman')}</h3><p className="text-amber-200 text-sm">{t('desc_roman')}</p></div>
+                   </button>
+                   <button onClick={() => handleModeClick('rounding')} className={`bg-teal-800 group hover:bg-teal-700 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-teal-950 hover:border-teal-600 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-teal-500/30 text-teal-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Shield" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_rounding')}</h3><p className="text-teal-200 text-sm">{t('desc_rounding')}</p></div>
+                   </button>
+                   
+                   <button onClick={() => handleModeClick('fraction')} className={`bg-cyan-900 group hover:bg-cyan-800 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-cyan-950 hover:border-cyan-700 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-cyan-500/30 text-cyan-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Battery" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_fraction')}</h3><p className="text-cyan-200 text-sm">{t('desc_fraction')}</p></div>
+                   </button>
+                   <button onClick={() => handleModeClick('fraction_panel')} className={`bg-orange-800 group hover:bg-orange-700 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-orange-950 hover:border-orange-600 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-orange-500/30 text-orange-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Sun" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_fraction_panel')}</h3><p className="text-orange-200 text-sm">{t('desc_fraction_panel')}</p></div>
+                   </button>
+                   
+                   {/* Zajmuje 2 kolumny na dużych ekranach */}
+                   <button onClick={() => handleModeClick('fraction_chamber')} className={`sm:col-span-2 bg-emerald-900 group hover:bg-emerald-800 p-6 rounded-3xl shadow-lg hover:shadow-xl border-b-4 border-emerald-950 hover:border-emerald-700 transition-all flex items-center gap-6 text-white ${currentUser.activeSkin}`}>
+                        <div className="bg-emerald-500/30 text-emerald-200 p-4 rounded-2xl group-hover:scale-110 transition-transform shadow-sm"><Icon name="Grid" size={32} /></div>
+                        <div className="text-left"><h3 className="text-xl font-bold">{t('mode_fraction_chamber')}</h3><p className="text-emerald-200 text-sm">{t('desc_fraction_chamber')}</p></div>
+                   </button>
                 </div>
               </div>
             </div>
@@ -947,10 +1010,15 @@
                 sub: { name: "mode_sub", icon: <span className="text-4xl font-bold">-</span> },
                 mul: { name: "mode_mul", icon: <span className="text-3xl font-bold">×</span> },
                 div: { name: "mode_div", icon: <span className="text-3xl font-bold">:</span> },
-                unknown: { name: "mode_unknown", icon: <Icon name="HelpCircle" size={32} /> },
+                unknown: { name: "mode_unknown", icon: <Icon name="Target" size={32} /> },
                 sequences: { name: "mode_sequences", icon: <Icon name="Radio" size={32} /> },
                 order: { name: "mode_order", icon: <Icon name="Terminal" size={32} /> },
                 weight: { name: "mode_weight", icon: <Icon name="Scale" size={32} /> },
+                roman: { name: "mode_roman", icon: <Icon name="BookOpen" size={32} /> },
+                rounding: { name: "mode_rounding", icon: <Icon name="Shield" size={32} /> },
+                fraction: { name: "mode_fraction", icon: <Icon name="Battery" size={32} /> },
+                fraction_panel: { name: "mode_fraction_panel", icon: <Icon name="Sun" size={32} /> },
+                fraction_chamber: { name: "mode_fraction_chamber", icon: <Icon name="Grid" size={32} /> },
             }[mode] || { name: "Misja", icon: null };
 
             // Ustalenie kolorów tekstu na podstawie tła użytkownika
@@ -958,10 +1026,18 @@
             const textColor = isDarkBackground ? 'text-white' : 'text-indigo-800';
             const subTextColor = isDarkBackground ? 'text-gray-300' : 'text-gray-600';
             
+            // Definicja ikon planet do wstawienia w karty
+            const difficultyIcons = {
+                easy: <span className="text-5xl mb-4">🌎</span>, 
+                medium: <span className="text-5xl mb-4">🚀</span>, // Mars (użycie rakiety jako symbol Marsa)
+                hard: <span className="text-5xl mb-4">🪐</span>,  // Jowisz
+            };
+
             return (
-                // Zmieniono tło na dynamiczne, które jest domyślne dla strony profilu/sklepu
+                // Użycie dynamicznego tła dla całej strony
                 <div className={`min-h-screen ${user?.activeBackground || 'bg-gradient-to-b from-indigo-100 to-purple-100'} flex flex-col items-center justify-center p-4`}>
                     <div className="w-full max-w-2xl text-center mb-8">
+                        {/* Ikona misji - usunięta zgodnie z prośbą */}
                         <h1 className={`text-3xl font-bold mb-2 ${textColor}`}>{t('difficulty_select_title')}</h1>
                         <p className={`text-lg flex items-center justify-center gap-2 ${subTextColor}`}>{modeInfo.icon} {t('mode')}: <span className="font-extrabold text-indigo-600">{t(modeInfo.name)}</span></p>
                     </div>
@@ -971,9 +1047,15 @@
                             const colorClass = {green: 'border-green-400 text-green-700 bg-green-50', yellow: 'border-yellow-400 text-yellow-700 bg-yellow-50', red: 'border-red-400 text-red-700 bg-red-50'}[level.color];
                             return (
                                 <button key={levelKey} onClick={() => onSelectLevel(mode, levelKey)} className={`w-full p-6 rounded-3xl shadow-xl border-b-8 transition-all transform hover:scale-[1.02] ${colorClass}`}>
-                                    <div className="text-3xl font-black mb-2">{t(level.nameKey)}</div>
+                                    
+                                    {/* IKONA PLANETY NAD TYTUŁEM KARTY - z marginesem mb-4 */}
+                                    {difficultyIcons[levelKey]}
+
+                                    <div className="text-3xl font-black mb-2 flex items-center justify-center gap-2">
+                                        {t(level.nameKey)}
+                                    </div>
                                     <p className="text-sm text-gray-600 mb-4">{t(level.descKey)}</p>
-                                    <div className="font-bold text-lg">{t('range')}: do {level.max}</div>
+                                    <div className="font-bold text-lg">{t('range')}: {level.max}</div>
                                 </button>
                             );
                         })}
@@ -1018,13 +1100,9 @@
             const cardBgClass = 'bg-white'; // Karta RÓWNANIA jest ZAWSZE biała (dla kontrastu)
             const cardBorderColor = 'border-indigo-200'; // Używamy domyślnego koloru dla ramki, chyba że jest feedback
 
-            if (question.type === 'weight') {
-                // Style dla dużych liczb i symboli
-                const bigNumberClass = 'text-4xl sm:text-5xl font-black text-black'; // ZMIANA TUTAJ
-                const inputStyle = 'w-20 h-20 flex items-center justify-center rounded-xl text-4xl font-bold text-white';
-
-                return (
-                    <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
+            // Helper to render basic game container to avoid repetition
+            const GameContainer = ({ children }) => (
+                <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
                     <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
                         <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
                         <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
@@ -1033,63 +1111,72 @@
                         <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
                         </div>
                     </div>
-
                     <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
-                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                         {children}
+                    </div>
+                </div>
+            );
+            
+            const NumberPad = () => (
+                <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                            <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
+                        ))}
+                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
+                        <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
+                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
+                </div>
+            );
+            
+            const FeedbackSection = () => (
+                <div className="h-8 mt-2">
+                     {feedback === 'correct' && <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>}
+                     {feedback === 'wrong' && <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>}
+                </div>
+            );
+            
+            const Fraction = ({ n, d, className="" }) => (
+                <div className={`flex flex-col items-center justify-center text-3xl sm:text-4xl font-black ${className}`}>
+                    <span className="border-b-4 border-current px-2 mb-1">{n}</span>
+                    <span>{d}</span>
+                </div>
+            );
+
+            const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
+
+            if (question.type === 'weight') {
+                // Style dla dużych liczb i symboli
+                const bigNumberClass = 'text-4xl sm:text-5xl font-black text-black'; 
+                const inputStyle = 'w-20 h-20 flex items-center justify-center rounded-xl text-4xl font-bold text-white';
+
+                return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor} p-8 sm:p-10`}>
                         <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
                         <div className={`text-lg mb-4 font-medium text-gray-500`}>{t('compare_instruction')}</div>
                         
-                        <div className={`flex items-center justify-center gap-3 sm:gap-6 mb-8 ${mainTextColor}`}>
-                            {/* Wyrażenie 1 */}
+                        <div className={`flex items-center justify-center gap-3 sm:gap-10 mb-8 ${mainTextColor}`}>
                             <span className={bigNumberClass}>{question.leftExpr}</span>
-                            
-                            {/* Pole odpowiedzi/Znak Zapytania */}
-                            <div className={`${inputStyle} ${userAnswer ? 'bg-indigo-600' : 'bg-gray-300 text-gray-700'}`}>
-                                {userAnswer || '?'}
-                            </div>
-
-                            {/* Wyrażenie 2 */}
+                            <div className={`${inputStyle} ${userAnswer ? 'bg-indigo-600' : 'bg-gray-300 text-gray-700'}`}>{userAnswer || '?'}</div>
                             <span className={bigNumberClass}>{question.rightExpr}</span>
                         </div>
-
-                        <div className="h-8">
-                            {feedback === 'correct' && (
-                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>
-                            )}
-                            {feedback === 'wrong' && (
-                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>
-                            )}
-                        </div>
+                        <FeedbackSection />
                         </Card>
-                        
-                        {/* PRZYCISKI PORÓWNAWCZE */}
                         <div className="flex justify-center gap-4 w-full mb-6">
-                           <button onClick={() => onAnswerChange('<')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-6xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">&lt;</button>
-                           <button onClick={() => onAnswerChange('=')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-6xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">=</button>
-                           <button onClick={() => onAnswerChange('>')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-6xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">&gt;</button>
+                           <button onClick={() => onAnswerChange('<')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-4xl sm:text-5xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">&lt;</button>
+                           <button onClick={() => onAnswerChange('=')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-4xl sm:text-5xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">=</button>
+                           <button onClick={() => onAnswerChange('>')} className="bg-white w-24 h-24 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-4xl sm:text-5xl font-black text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">&gt;</button>
                         </div>
-                        <div className="w-full max-w-[280px]">
-                            <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
+                        <div className="w-full flex justify-center max-w-[280px]"> 
+                            <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px] w-full" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
                         </div>
-                    </div>
-                    </div>
+                    </GameContainer>
                 );
             }
 
             if (question.type === 'sequence') {
-                const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
                 return (
-                    <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
-                    <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
-                        <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
-                        </button>
-                        <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
-                        <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
+                    <GameContainer>
                         <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
                         <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
                         <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('finish_signal')}</div>
@@ -1100,74 +1187,129 @@
                             <span className="text-gray-400 mx-1">...</span>
                             <span className={activeInputStyle}>{userAnswer || '?'}</span>
                         </div>
-
-                        <div className="h-8">
-                            {feedback === 'correct' && (
-                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>
-                            )}
-                            {feedback === 'wrong' && (
-                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>
-                            )}
-                        </div>
+                        <FeedbackSection />
                         </Card>
-                        
-                        <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                            <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
-                        ))}
-                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
-                        <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
-                        </div>
-                    </div>
-                    </div>
+                        <NumberPad />
+                    </GameContainer>
                 );
             }
 
             if (question.type === 'order') {
-                const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
                 return (
-                    <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
-                    <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
-                        <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                        <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
-                        </button>
-                        <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
-                        <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
+                    <GameContainer>
                         <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
                         <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
                         <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('calc_code')}</div>
-                        
                         <div className={`text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 flex justify-center items-center gap-2 flex-wrap`}>
                             <span>{question.expression}</span>
                             <span>=</span>
                             <span className={activeInputStyle}>{userAnswer || '?'}</span>
                         </div>
-
-                        <div className="h-8">
-                            {feedback === 'correct' && (
-                            <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>
-                            )}
-                            {feedback === 'wrong' && (
-                            <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>
-                            )}
-                        </div>
+                        <FeedbackSection />
                         </Card>
-                        
-                        <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                            <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
-                        ))}
-                        <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
-                        <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                        <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
+                        <NumberPad />
+                    </GameContainer>
+                );
+            }
+            
+            // NOWE TYPY PYTAŃ
+            if (question.type === 'roman') {
+                 return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('translate_roman')}</div>
+                        <div className={`text-5xl sm:text-6xl font-black text-amber-800 mb-8 flex justify-center items-center gap-2 flex-wrap font-serif`}>
+                            <span>{question.roman}</span>
+                            <span className="text-gray-400 font-sans">=</span>
+                            <span className={`${activeInputStyle} font-sans`}>{userAnswer || '?'}</span>
                         </div>
-                    </div>
-                    </div>
+                        <FeedbackSection />
+                        </Card>
+                        <NumberPad />
+                    </GameContainer>
+                );
+            }
+
+            if (question.type === 'rounding') {
+                 return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>
+                            {t('round_instruction')} <span className="font-bold text-teal-600">{t(question.rule)}</span>
+                        </div>
+                        <div className={`text-5xl sm:text-6xl font-black text-teal-900 mb-8 flex justify-center items-center gap-2 flex-wrap`}>
+                            <span>{question.number}</span>
+                            <span className="text-gray-400">→</span>
+                            <span className={activeInputStyle}>{userAnswer || '?'}</span>
+                        </div>
+                        <FeedbackSection />
+                        </Card>
+                        <NumberPad />
+                    </GameContainer>
+                );
+            }
+
+            if (question.type === 'fraction_panel') {
+                 return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('calc_numerator')}</div>
+                        <div className={`flex justify-center items-center gap-4 flex-wrap mb-8 text-orange-900`}>
+                            <Fraction n={question.n1} d={question.d} />
+                            <span className="text-4xl font-bold">{question.op}</span>
+                            <Fraction n={question.n2} d={question.d} />
+                            <span className="text-4xl font-bold">=</span>
+                            <div className="flex flex-col items-center">
+                                <span className={`${activeInputStyle} text-3xl sm:text-4xl mb-1`}>{userAnswer || '?'}</span>
+                                <span className="border-t-4 border-current w-full"></span>
+                                <span className="text-3xl sm:text-4xl font-black">{question.d}</span>
+                            </div>
+                        </div>
+                        <FeedbackSection />
+                        </Card>
+                        <NumberPad />
+                    </GameContainer>
+                );
+            }
+
+            if (question.type === 'fraction_chamber') {
+                 return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('calc_fraction')}</div>
+                        <div className={`flex justify-center items-center gap-4 flex-wrap mb-8 text-emerald-900`}>
+                            <Fraction n={question.n} d={question.d} />
+                            <span className="text-4xl font-bold">×</span>
+                            <span className="text-5xl font-black">{question.whole}</span>
+                            <span className="text-4xl font-bold">=</span>
+                            <span className={`${activeInputStyle} text-5xl font-black`}>{userAnswer || '?'}</span>
+                        </div>
+                        <FeedbackSection />
+                        </Card>
+                        <NumberPad />
+                    </GameContainer>
+                );
+            }
+
+             if (question.type === 'fraction') {
+                 return (
+                    <GameContainer>
+                        <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
+                        <div className={`font-bold uppercase tracking-widest text-xs mb-4 text-gray-400`}>{t('level')}: {difficultyName}</div>
+                        <div className={`text-sm mb-4 font-medium text-gray-500`}>{t('calc_fraction')}</div>
+                        <div className={`text-4xl sm:text-5xl font-black text-cyan-900 mb-8 flex justify-center items-center gap-3 flex-wrap`}>
+                            <span>{question.expression}</span>
+                            <span className="text-gray-400">=</span>
+                            <span className={activeInputStyle}>{userAnswer || '?'}</span>
+                        </div>
+                        <FeedbackSection />
+                        </Card>
+                        <NumberPad />
+                    </GameContainer>
                 );
             }
 
@@ -1175,26 +1317,13 @@
             const isMissingA = question.missing === 'term1';
             const isMissingB = question.missing === 'term2';
             const isMissingResult = question.missing === 'result';
-            const activeInputStyle = `min-w-[80px] sm:min-w-[100px] inline-block border-b-4 ${userAnswer ? 'text-indigo-800 border-indigo-500' : 'text-gray-300 border-gray-200'}`;
 
             return (
-                <div className={`min-h-screen ${backgroundClass} flex flex-col`}>
-                <div className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
-                    <button onClick={onFinishGame} className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm transition">
-                    <Icon name="ArrowLeft" size={20} /> <span className="hidden sm:inline">{t('mission_abort')}</span>
-                    </button>
-                    <div className="bg-white px-4 py-2 rounded-full shadow-sm font-bold text-indigo-600 flex items-center gap-2 border border-indigo-100">
-                    <Icon name="Check" size={18} className="text-green-500"/> {gameStats.correct}/{gameStats.total}
-                    </div>
-                </div>
-
-                <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-md mx-auto w-full">
+                <GameContainer>
                     <Card className={`w-full text-center mb-6 transition-all duration-300 border-b-8 ${cardBgClass} ${feedback === 'correct' ? 'border-green-400 bg-green-50 shadow-green-200' : feedback === 'wrong' ? 'border-red-400 bg-red-50 shadow-red-200' : cardBorderColor}`}>
                     <div className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">{t('level')}: {difficultyName}</div>
-                    {question.type !== 'sequence' && question.type !== 'order' && (
-                        <div className={`text-sm mb-4 font-medium ${subTextColor}`}>{t('solve_equation')}</div>
-                    )}
-                    {/* Wprowadzenie klasy text-black na liczbach równania */}
+                    <div className={`text-sm mb-4 font-medium ${subTextColor}`}>{t('solve_equation')}</div>
+                    
                     <div className={`text-6xl sm:text-7xl font-extrabold mb-8 flex justify-center items-center gap-3 sm:gap-6 flex-wrap text-black`}>
                         {isMissingA ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.term1}</span>}
                         <span className="text-indigo-500">{question.operator}</span>
@@ -1202,22 +1331,10 @@
                         <span>=</span>
                         {isMissingResult ? <span className={activeInputStyle}>{userAnswer || '?'}</span> : <span>{question.result}</span>}
                     </div>
-                    <div className="h-8">
-                        {feedback === 'correct' && <div className="text-green-600 font-bold text-xl animate-bounce flex items-center justify-center gap-2"><Icon name="Star" className="fill-current" size={20}/> {t('great')}</div>}
-                        {feedback === 'wrong' && <div className="text-red-500 font-bold text-xl flex items-center justify-center gap-2"><Icon name="X" size={24}/> {t('try_again')}</div>}
-                    </div>
+                    <FeedbackSection />
                     </Card>
-                    
-                    <div className="grid grid-cols-3 gap-3 w-full max-w-[360px]">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                        <button key={num} onClick={() => onAnswerChange(num.toString())} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">{num}</button>
-                    ))}
-                    <button onClick={() => onAnswerChange('backspace')} className="bg-red-50 h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-red-500 hover:bg-red-100 flex items-center justify-center border border-red-100 transition-all"><Icon name="X" size={24} /></button>
-                    <button onClick={() => onAnswerChange('0')} className="bg-white h-16 rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.1)] active:shadow-none active:translate-y-[4px] text-3xl font-bold text-indigo-900 hover:bg-indigo-50 transition-all border border-indigo-100">0</button>
-                    <Button variant={feedback === 'wrong' ? 'danger' : 'success'} onClick={handleCheckAnswer} className="h-16 text-xl rounded-2xl shadow-[0_4px_0_rgb(0,0,0,0.2)] active:shadow-none active:translate-y-[4px]" disabled={!userAnswer || feedback === 'correct'}>{feedback === 'correct' ? <Icon name="Check" size={32} /> : t('check')}</Button>
-                    </div>
-                </div>
-                </div>
+                    <NumberPad />
+                </GameContainer>
             );
         };
 
@@ -1490,6 +1607,15 @@
             }
           };
 
+          const toRoman = (num) => {
+              const lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
+              let roman = '';
+              for ( let i in lookup ) {
+                while ( num >= lookup[i] ) { roman += i; num -= lookup[i]; }
+              }
+              return roman;
+          };
+
           const generateQuestion = (mode, difficulty) => {
             const maxVal = DIFFICULTY_LEVELS[difficulty].max;
             let a = 1, b = 1, operator = '+', result = 2, answer = 2;
@@ -1500,6 +1626,144 @@
             if (difficulty === 'hard') minVal = 100;
 
             const generateRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+            if (mode === 'roman') {
+                let num;
+                if (difficulty === 'easy') num = generateRandom(1, 12); // Zegar
+                else if (difficulty === 'medium') num = generateRandom(10, 50);
+                else num = generateRandom(50, 100);
+                
+                setQuestion({ type: 'roman', roman: toRoman(num), answer: num });
+                setUserAnswer(''); setFeedback(null); return;
+            }
+
+            if (mode === 'rounding') {
+                let num, rule, rounded;
+                if (difficulty === 'easy') {
+                    num = generateRandom(11, 99);
+                    rule = 'to_nearest_10';
+                    rounded = Math.round(num / 10) * 10;
+                } else if (difficulty === 'medium') {
+                    num = generateRandom(101, 999);
+                    rule = 'to_nearest_100';
+                    rounded = Math.round(num / 100) * 100;
+                } else {
+                    num = generateRandom(101, 999);
+                    rule = 'to_nearest_10';
+                    rounded = Math.round(num / 10) * 10;
+                }
+                setQuestion({ type: 'rounding', number: num, rule, answer: rounded });
+                setUserAnswer(''); setFeedback(null); return;
+            }
+
+            if (mode === 'fraction') {
+                let whole, part, expression;
+                if (difficulty === 'easy') {
+                    // Połowy (50%, 1/2)
+                    whole = generateRandom(2, 50) * 2; // Zawsze parzyste
+                    const isPercent = Math.random() > 0.5;
+                    expression = isPercent ? `50% of ${whole}` : `1/2 of ${whole}`;
+                    answer = whole / 2;
+                } else if (difficulty === 'medium') {
+                    // Ćwiartki (25%, 1/4) i Dziesiątki (10%, 1/10)
+                    const type = Math.random();
+                    if (type < 0.5) {
+                        whole = generateRandom(1, 25) * 4;
+                        const isPercent = Math.random() > 0.5;
+                        expression = isPercent ? `25% of ${whole}` : `1/4 of ${whole}`;
+                        answer = whole / 4;
+                    } else {
+                        whole = generateRandom(1, 10) * 10;
+                        const isPercent = Math.random() > 0.5;
+                        expression = isPercent ? `10% of ${whole}` : `1/10 of ${whole}`;
+                        answer = whole / 10;
+                    }
+                } else {
+                    // 3/4, 75%, 20%
+                     const type = Math.random();
+                     if (type < 0.6) {
+                        whole = generateRandom(1, 25) * 4;
+                        const isPercent = Math.random() > 0.5;
+                        expression = isPercent ? `75% of ${whole}` : `3/4 of ${whole}`;
+                        answer = (whole / 4) * 3;
+                     } else {
+                        whole = generateRandom(1, 20) * 5;
+                        const isPercent = Math.random() > 0.5;
+                        expression = isPercent ? `20% of ${whole}` : `1/5 of ${whole}`;
+                        answer = whole / 5;
+                     }
+                }
+                
+                // Dostosowanie języka
+                expression = expression.replace("of", lang === 'pl' ? "z" : "of");
+
+                setQuestion({ type: 'fraction', expression, answer });
+                setUserAnswer(''); setFeedback(null); return;
+            }
+
+            if (mode === 'fraction_panel') {
+                // Calibrate Solar Panels: Addition/Subtraction of fractions
+                let den, n1, n2, op, ans;
+                if (difficulty === 'easy') {
+                    den = generateRandom(3, 9);
+                    n1 = generateRandom(1, den - 1);
+                    n2 = generateRandom(1, den - n1);
+                    op = '+';
+                    ans = n1 + n2;
+                } else if (difficulty === 'medium') {
+                    op = Math.random() > 0.5 ? '+' : '-';
+                    den = generateRandom(4, 12);
+                    if (op === '+') {
+                         n1 = generateRandom(1, den - 1);
+                         n2 = generateRandom(1, den - n1);
+                         ans = n1 + n2;
+                    } else {
+                         n1 = generateRandom(2, den);
+                         n2 = generateRandom(1, n1 - 1);
+                         ans = n1 - n2;
+                    }
+                } else {
+                    // Hard: Mixed ops, maybe simpler mixed denominators in future, keeping same den for now to target 8-11 range strictly
+                    op = Math.random() > 0.5 ? '+' : '-';
+                    den = generateRandom(5, 20);
+                    if (op === '+') {
+                         n1 = generateRandom(1, den - 1);
+                         n2 = generateRandom(1, den - n1);
+                         ans = n1 + n2;
+                    } else {
+                         n1 = generateRandom(2, den);
+                         n2 = generateRandom(1, n1 - 1);
+                         ans = n1 - n2;
+                    }
+                }
+                setQuestion({ type: 'fraction_panel', n1, n2, d: den, op, answer: ans });
+                setUserAnswer(''); setFeedback(null); return;
+            }
+
+            if (mode === 'fraction_chamber') {
+                // Divide Chamber: Fraction multiplication
+                let n, d, whole, ans;
+                if (difficulty === 'easy') {
+                    // 1/2, 1/3, 1/4
+                    d = generateRandom(2, 4);
+                    n = 1;
+                    whole = generateRandom(1, 10) * d;
+                } else if (difficulty === 'medium') {
+                    // 2/3, 3/4, 2/5
+                    d = generateRandom(3, 6);
+                    n = generateRandom(2, d - 1);
+                    whole = generateRandom(1, 12) * d;
+                } else {
+                    // Larger numbers
+                    d = generateRandom(4, 9);
+                    n = generateRandom(2, d - 1);
+                    whole = generateRandom(2, 15) * d;
+                }
+                ans = (whole / d) * n;
+                setQuestion({ type: 'fraction_chamber', n, d, whole, answer: ans });
+                setUserAnswer(''); setFeedback(null); return;
+            }
+
 
             if (mode === 'sequences') {
                 let seq = [];
@@ -1677,9 +1941,9 @@
           // Overload handleGameInput for weight mode to accept strings directly as full answer
           const onAnswerChange = (val) => {
              if (gameMode === 'weight') {
+                 // Resetuj feedback i ustaw nową odpowiedź
+                 setFeedback(null);
                  setUserAnswer(val);
-                 // Optionally auto-check here, but user might want to change mind.
-                 // Let's keep it simple: select, then check.
              } else {
                  handleGameInput(val);
              }
